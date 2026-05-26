@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎌 アニメクイズ（日本編）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://pecpec37-gift.github.io/portal/stamp.js"></script>
+<style>
+:root{--bg:#0e0820;--bg2:#160c2e;--surface:#1c1038;--surface2:#261848;--border:rgba(168,85,247,0.18);--purple:#9333ea;--purple2:#a855f7;--purple3:#d8b4fe;--pink:#ec4899;--pink2:#f9a8d4;--gold:#f59e0b;--gold2:#fde68a;--green:#10b981;--red:#ef4444;--text:#faf0ff;--text2:rgba(250,240,255,0.7);--text3:rgba(250,240,255,0.38);--radius:6px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 10%,rgba(147,51,234,0.12) 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,rgba(236,72,153,0.08) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.screen{display:none;position:relative;z-index:1;}.screen.active{display:block;}
+#screen-top{min-height:100vh;}
+.top-hero{background:linear-gradient(160deg,#160830 0%,#0e0820 55%,#080514 100%);padding:52px 24px 44px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.top-hero::before{content:'🎌';position:absolute;right:-10px;bottom:-20px;font-size:180px;opacity:0.04;pointer-events:none;}
+.top-hero::after{content:'✨';position:absolute;left:10px;top:10px;font-size:120px;opacity:0.035;pointer-events:none;}
+.top-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.22em;color:var(--purple2);text-transform:uppercase;margin-bottom:12px;}
+.top-title{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:clamp(32px,7vw,60px);line-height:1.1;color:var(--text);margin-bottom:8px;}
+.top-title span{background:linear-gradient(90deg,var(--purple2),var(--pink2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.top-sub{font-size:13px;color:var(--text2);letter-spacing:0.06em;margin-bottom:28px;}
+.top-rule{display:inline-block;background:rgba(147,51,234,0.08);border:1px solid rgba(147,51,234,0.22);border-radius:6px;padding:14px 20px;text-align:left;font-size:12px;line-height:2;color:var(--text2);}
+.top-rule strong{color:var(--purple3);}
+.genres-wrap{max-width:920px;margin:0 auto;padding:32px 20px 20px;}
+.genres-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.genres-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.genres-hint{font-size:12px;color:var(--pink2);background:rgba(236,72,153,0.07);border:1px solid rgba(236,72,153,0.2);border-radius:4px;padding:8px 14px;margin-bottom:20px;text-align:center;letter-spacing:0.04em;}
+.genres-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:24px;}
+.genre-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s,border-color 0.12s;position:relative;overflow:hidden;}
+.genre-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(147,51,234,0.07),transparent);opacity:0;transition:opacity 0.15s;}
+.genre-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.5);border-color:rgba(168,85,247,0.5);}
+.genre-card:hover::before{opacity:1;}
+.genre-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:6px 6px 0 0;}
+.genre-icon{font-size:30px;line-height:1;margin-bottom:8px;display:block;}
+.genre-name{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:16px;margin-bottom:4px;color:var(--text);}
+.genre-desc{font-size:11px;color:var(--text3);margin-bottom:4px;line-height:1.6;}
+.genre-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;}
+.genre-start{position:absolute;top:14px;right:14px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--purple2);opacity:0;transition:opacity 0.15s;}
+.genre-card:hover .genre-start{opacity:1;}
+.ranking-btn-wrap{text-align:center;padding:8px 0 36px;}
+.ranking-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.12em;padding:10px 24px;background:none;border:1px solid var(--border);color:var(--text3);border-radius:3px;cursor:pointer;transition:all 0.15s;}
+.ranking-btn:hover{border-color:var(--gold2);color:var(--gold2);}
+#screen-intro{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;}
+#screen-intro.active{display:flex;}
+.intro-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px 28px;width:100%;max-width:420px;text-align:center;}
+.intro-icon{font-size:52px;margin-bottom:10px;display:block;}
+.intro-name{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:24px;margin-bottom:4px;color:var(--purple3);}
+.intro-desc{font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.7;}
+.intro-rule{font-size:12px;line-height:1.9;color:var(--text2);text-align:left;background:rgba(147,51,234,0.07);border-radius:6px;padding:12px 14px;margin-bottom:20px;}
+.intro-rule strong{color:var(--purple3);}
+.name-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:6px;text-align:left;}
+.name-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;margin-bottom:16px;outline:none;transition:border-color 0.15s;}
+.name-input:focus{border-color:var(--purple2);}
+.name-input::placeholder{color:var(--text3);}
+.start-btn{width:100%;padding:14px;background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity 0.15s,transform 0.1s;letter-spacing:0.04em;}
+.start-btn:hover{opacity:0.88;}
+.start-btn:active{transform:scale(0.98);}
+.back-link{margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;transition:color 0.15s;background:none;border:none;}
+.back-link:hover{color:var(--text);}
+#screen-quiz{min-height:100vh;}
+.quiz-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:10;}
+.quiz-progress{flex:1;height:3px;background:rgba(147,51,234,0.15);border-radius:2px;overflow:hidden;min-width:60px;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px;transition:width 0.3s;}
+.quiz-qnum{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);white-space:nowrap;letter-spacing:0.08em;}
+.quiz-score{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--purple3);white-space:nowrap;}
+.quiz-timer-wrap{display:flex;align-items:center;gap:5px;}
+.quiz-timer{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:22px;color:var(--purple3);min-width:40px;text-align:right;transition:color 0.3s;}
+.quiz-timer.danger{color:#ef4444;animation:pulse 0.5s infinite alternate;}
+@keyframes pulse{from{opacity:1;}to{opacity:0.5;}}
+.quiz-timer-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:0.1em;}
+.quiz-body{max-width:640px;margin:0 auto;padding:28px 20px 40px;}
+.quiz-type-badge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.16em;padding:3px 10px;border-radius:3px;display:inline-block;margin-bottom:14px;text-transform:uppercase;}
+.quiz-type-badge.type-4{background:rgba(147,51,234,0.15);color:var(--purple2);}
+.quiz-type-badge.type-ox{background:rgba(16,185,129,0.12);color:#34d399;}
+.quiz-q{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:clamp(16px,4vw,20px);line-height:1.65;margin-bottom:22px;color:var(--text);}
+.choices{display:flex;flex-direction:column;gap:10px;}
+.choice-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;text-align:left;font-family:'Noto Sans JP',sans-serif;font-size:14px;color:var(--text);cursor:pointer;transition:all 0.12s;display:flex;align-items:center;gap:12px;}
+.choice-btn:hover:not(:disabled){background:var(--surface2);border-color:rgba(168,85,247,0.5);transform:translateX(4px);}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{background:rgba(16,185,129,0.15);border-color:#10b981;color:#34d399;}
+.choice-btn.wrong{background:rgba(239,68,68,0.12);border-color:#ef4444;color:#f87171;}
+.choice-label{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);min-width:20px;}
+.ox-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ox-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 16px;font-size:38px;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;}
+.ox-btn span{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;}
+.ox-btn:hover:not(:disabled){transform:scale(1.03);border-color:rgba(168,85,247,0.5);}
+.ox-btn:disabled{cursor:default;}
+.ox-btn.correct{background:rgba(16,185,129,0.15);border-color:#10b981;}
+.ox-btn.wrong{background:rgba(239,68,68,0.12);border-color:#ef4444;}
+.feedback-bar{margin-top:14px;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:700;opacity:0;transition:opacity 0.2s;min-height:44px;}
+.feedback-bar.show{opacity:1;}
+.feedback-bar.ok{background:rgba(16,185,129,0.1);color:#34d399;border:1px solid rgba(16,185,129,0.28);}
+.feedback-bar.ng{background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.22);}
+.next-btn{margin-top:14px;width:100%;padding:12px;background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:15px;border:none;border-radius:6px;cursor:pointer;transition:opacity 0.15s;display:none;}
+.next-btn.show{display:block;}
+.next-btn:hover{opacity:0.88;}
+#screen-result{min-height:100vh;display:none;flex-direction:column;align-items:center;padding:40px 20px 60px;}
+#screen-result.active{display:flex;}
+.result-box{width:100%;max-width:520px;}
+.result-genre{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:8px;text-align:center;}
+.result-score-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px;text-align:center;margin-bottom:20px;}
+.result-medal{font-size:48px;margin-bottom:8px;display:block;}
+.result-score{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:64px;line-height:1;background:linear-gradient(90deg,var(--purple2),var(--pink2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.result-score-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--text3);margin-bottom:16px;text-transform:uppercase;}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+.result-stat{background:var(--bg2);border-radius:6px;padding:12px 8px;text-align:center;}
+.result-stat-val{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:24px;color:var(--purple3);}
+.result-stat-val.green{color:#34d399;}
+.result-stat-val.gold{color:var(--gold2);}
+.result-stat-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+.result-actions{display:flex;gap:10px;margin-bottom:24px;}
+.result-btn{flex:1;padding:12px;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:14px;border-radius:6px;cursor:pointer;transition:all 0.15s;}
+.result-btn-primary{background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;border:none;}
+.result-btn-primary:hover{opacity:0.88;}
+.result-btn-secondary{background:none;color:var(--text2);border:1px solid var(--border);}
+.result-btn-secondary:hover{border-color:var(--purple2);color:var(--purple2);}
+.wrong-section{width:100%;max-width:520px;}
+.wrong-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.wrong-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;}
+.wrong-item-num{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text3);margin-bottom:6px;}
+.wrong-item-q{font-size:14px;line-height:1.6;color:var(--text);margin-bottom:10px;font-weight:700;}
+.wrong-item-ans{display:flex;align-items:flex-start;gap:8px;font-size:13px;}
+.wrong-item-ans-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:#10b981;background:rgba(16,185,129,0.1);padding:2px 7px;border-radius:2px;white-space:nowrap;margin-top:1px;}
+.wrong-item-ans-text{color:#34d399;line-height:1.5;}
+.portal-back{display:block;text-align:center;margin-top:28px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.1em;color:var(--text3);text-decoration:none;padding:10px 20px;border:1px solid var(--border);border-radius:3px;transition:all 0.15s;}
+.portal-back:hover{border-color:var(--purple2);color:var(--purple2);}
+#screen-ranking{min-height:100vh;padding:40px 20px 60px;}
+.ranking-wrap{max-width:600px;margin:0 auto;}
+.ranking-top{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.ranking-title{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:22px;color:var(--gold2);flex:1;}
+.ranking-back{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:3px;padding:6px 14px;cursor:pointer;transition:all 0.15s;}
+.ranking-back:hover{border-color:var(--gold2);color:var(--gold2);}
+.ranking-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px;border-bottom:1px solid var(--border);}
+.ranking-tabs::-webkit-scrollbar{display:none;}
+.ranking-tab{flex-shrink:0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;padding:10px 12px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.ranking-tab.active{color:var(--purple2);border-bottom-color:var(--purple2);}
+.ranking-list{display:flex;flex-direction:column;gap:6px;}
+.ranking-empty{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);text-align:center;padding:32px;letter-spacing:0.1em;}
+.ranking-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;}
+.ranking-row.top1{border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.05);}
+.ranking-row.top2{border-color:rgba(200,200,200,0.25);}
+.ranking-row.top3{border-color:rgba(180,100,30,0.3);}
+.ranking-pos{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:18px;min-width:28px;color:var(--text3);}
+.ranking-pos.gold{color:#f59e0b;}.ranking-pos.silver{color:#9ca3af;}.ranking-pos.bronze{color:#b45309;}
+.ranking-name{flex:1;font-size:14px;font-weight:700;color:var(--text);}
+.ranking-score{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:20px;color:var(--purple3);}
+.ranking-date{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-left:6px;}
+.ranking-del{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 8px;margin-top:12px;font-family:'Share Tech Mono',monospace;letter-spacing:0.08em;transition:color 0.15s;}
+.ranking-del:hover{color:#ef4444;}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);color:var(--purple3);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 20px;border-radius:6px;border:1px solid var(--purple);z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.portal-fixed-btn{position:fixed;bottom:20px;left:20px;z-index:9999;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(14,8,32,0.92);color:var(--purple3);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.08em;border-radius:4px;border:1px solid rgba(147,51,234,0.35);text-decoration:none;backdrop-filter:blur(6px);box-shadow:0 4px 16px rgba(0,0,0,0.5);transition:all 0.15s;white-space:nowrap;}
+.portal-fixed-btn:hover{background:rgba(14,8,32,0.98);border-color:rgba(168,85,247,0.7);transform:translateY(-1px);}
+@media(max-width:480px){.genres-grid{grid-template-columns:1fr 1fr;}.result-actions{flex-direction:column;}.portal-fixed-btn{bottom:14px;left:14px;padding:8px 14px;font-size:11px;}}
+</style>
+</head>
+<body>
+<div id="screen-top" class="screen active">
+  <div class="top-hero">
+    <div class="top-eyebrow">Tommy's Quiz Dojo</div>
+    <h1 class="top-title">アニメクイズ<span>（日本編）</span></h1>
+    <p class="top-sub">少年・少女・SF・日常・ジブリ・名作まで幅広く出題！</p>
+    <div class="top-rule">📋 制限時間：<strong>120秒</strong> ／ 各ジャンル<strong>10問</strong>ランダム出題<br>✅ 正解 → <strong>+10点</strong> ＋ 時間+5秒<br>❌ 不正解 → 減点なし ＋ 時間−5秒のペナルティ<br>🏆 残り時間がそのままボーナス点に加算！<br>【4択】と【○×】がランダムにミックスされます</div>
+  </div>
+  <div class="genres-wrap">
+    <div class="genres-label">// ジャンルを選んでスタート</div>
+    <div class="genres-hint">👆 カードをクリックするとすぐに始められます</div>
+    <div class="genres-grid" id="genres-grid"></div>
+    <div class="ranking-btn-wrap"><button class="ranking-btn" onclick="showRanking()">🏆 スコアランキングを見る</button></div>
+  </div>
+</div>
+<div id="screen-intro" class="screen">
+  <div class="intro-box">
+    <span class="intro-icon" id="intro-icon"></span>
+    <div class="intro-name" id="intro-name"></div>
+    <div class="intro-desc" id="intro-desc"></div>
+    <div class="intro-rule">制限時間：<strong>120秒</strong> ／ 10問ランダム出題（4択＋○×ミックス）<br>✅ 正解 → <strong>+10点</strong> ＋ 時間+5秒<br>❌ 不正解 → 減点なし ＋ 時間−5秒<br>🏆 残り時間がそのままボーナス点に加算</div>
+    <div class="name-label">// Your Name（ランキングに表示）</div>
+    <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="プレーヤー名（任意）">
+    <button class="start-btn" onclick="startGame()">スタート ▶</button>
+    <button class="back-link" onclick="showScreen('screen-top')">← 戻る</button>
+  </div>
+</div>
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-qnum" id="quiz-qnum">Q1 / 10</div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
+    <div class="quiz-score" id="quiz-score">0 pt</div>
+    <div class="quiz-timer-wrap"><div class="quiz-timer" id="quiz-timer">120</div><div class="quiz-timer-label">秒</div></div>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-type-badge" id="quiz-type-badge">4択</div>
+    <div class="quiz-q" id="quiz-q"></div>
+    <div id="quiz-choices"></div>
+    <div class="feedback-bar" id="feedback-bar"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ →</button>
+  </div>
+</div>
+<div id="screen-result" class="screen">
+  <div class="result-box">
+    <div class="result-genre" id="result-genre"></div>
+    <div class="result-score-wrap">
+      <span class="result-medal" id="result-medal">🏆</span>
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-score-label">TOTAL SCORE</div>
+      <div class="result-stats">
+        <div class="result-stat"><div class="result-stat-val green" id="result-correct">0</div><div class="result-stat-label">正解数</div></div>
+        <div class="result-stat"><div class="result-stat-val" id="result-wrong">0</div><div class="result-stat-label">不正解数</div></div>
+        <div class="result-stat"><div class="result-stat-val gold" id="result-bonus">+0</div><div class="result-stat-label">時間ボーナス</div></div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="result-btn result-btn-primary" onclick="retryGame()">もう一度挑戦</button>
+      <button class="result-btn result-btn-secondary" onclick="showScreen('screen-top')">← トップへ</button>
+    </div>
+  </div>
+  <div class="wrong-section" id="wrong-section"></div>
+  <a class="portal-back" href="https://pecpec37-gift.github.io/portal/">← とみやんのゲームランド</a>
+</div>
+<div id="screen-ranking" class="screen">
+  <div class="ranking-wrap">
+    <div class="ranking-top"><div class="ranking-title">🏆 スコアランキング</div><button class="ranking-back" onclick="showScreen('screen-top')">← トップへ</button></div>
+    <div class="ranking-tabs" id="ranking-tabs"></div>
+    <div class="ranking-list" id="ranking-list"></div>
+    <div style="text-align:center;margin-top:16px;"><button class="ranking-del" onclick="deleteRanking()">🗑️ このジャンルの記録を削除</button></div>
+  </div>
+</div>
+<div id="toast"></div>
+<a class="portal-fixed-btn" href="https://pecpec37-gift.github.io/portal/">← とみやんのゲームランド</a>
+<script>
+const GENRES=[
+  {id:'shonen',  icon:'🔥', name:'少年アニメ',         color:'#dc2626', desc:'ワンピース・鬼滅・NARUTO・ドラゴンボールなど'},
+  {id:'shoujo',  icon:'💕', name:'少女・恋愛アニメ',   color:'#ec4899', desc:'セーラームーン・まどか・カードキャプターなど'},
+  {id:'scifi',   icon:'🤖', name:'SF・ロボットアニメ', color:'#2563eb', desc:'エヴァ・ガンダム・コードギアスなど'},
+  {id:'nichijou',icon:'🏫', name:'日常・学園アニメ',   color:'#16a34a', desc:'けいおん・ハルヒ・ハイキューなど'},
+  {id:'ghibli',  icon:'🌿', name:'スタジオジブリ',     color:'#0891b2', desc:'トトロ・千と千尋・もののけ姫など'},
+  {id:'classic', icon:'🌟', name:'名作・クラシック',   color:'#d97706', desc:'ドラえもん・サザエさん・コナンなど'},
+];
+const DB={
+shonen:[
+  {type:'4',q:'「ドラゴンボール」の主人公・孫悟空の必殺技はどれか？',c:['螺旋丸','波紋疾走','鬼滅の刃','かめはめ波'],a:3},
+  {type:'ox',q:'「ワンピース」の主人公ルフィはゴムゴムの実を食べて体がゴムになった。',a:true},
+  {type:'4',q:'「鬼滅の刃」の主人公・竈門炭治郎が使う呼吸法はどれか？',c:['風の呼吸','雷の呼吸','水の呼吸','炎の呼吸'],a:2},
+  {type:'ox',q:'「NARUTO」の主人公・うずまきナルトは木ノ葉隠れの里の忍者だ。',a:true},
+  {type:'4',q:'「ハンター×ハンター」でゴンの父親は誰か？',c:['ジン=フリークス','コルトピ','シルバ=ゾルディック','ネテロ会長'],a:0},
+  {type:'ox',q:'「僕のヒーローアカデミア」の世界では人口の約80%が何らかの個性を持つ。',a:true},
+  {type:'4',q:'「呪術廻戦」の主人公・虎杖悠仁が持つ特殊な体の特徴はどれか？',c:['再生能力','呪力の無限貯蔵','呪王・宿儺の器として機能する肉体','鋼鉄の皮膚'],a:2},
+  {type:'ox',q:'「進撃の巨人」の舞台となる城壁都市の最も外側の壁はウォール・マリアだ。',a:true},
+  {type:'4',q:'「BLEACH」の主人公・黒崎一護の斬魄刀の名前はどれか？',c:['崩玉','破面','斬月','天鎖斬月'],a:2},
+  {type:'ox',q:'「テニスの王子様」の主人公・越前リョーマはアメリカ帰りの天才テニス少年だ。',a:true},
+  {type:'4',q:'「スラムダンク」の舞台となった高校の名前はどれか？',c:['山王工業','陵南高校','湘北高校','翔陽高校'],a:2},
+  {type:'ox',q:'「ドラゴンボールZ」でフリーザを倒したのはスーパーサイヤ人に変身した孫悟空だ。',a:true},
+  {type:'4',q:'「ワンピース」で「七武海」とは何か？',c:['海軍の最高幹部7人','4つの海の最強海賊団','空島に住む7神','世界政府公認の海賊7人の総称'],a:3},
+  {type:'ox',q:'「鬼滅の刃」では鬼は太陽の光を浴びると死んでしまう。',a:true},
+  {type:'4',q:'「NARUTO」でナルトの師匠・自来也の忍術は何に関係するか？',c:['タコ','ナメクジ','ヘビ','カエル'],a:3},
+  {type:'ox',q:'「僕のヒーローアカデミア」の主人公・緑谷出久の個性の名前はワン・フォー・オールだ。',a:true},
+  {type:'4',q:'「進撃の巨人」の主人公・エレン・イェーガーは何の力を持つか？',c:['獣の巨人の力','戦槌の力','巨人に変身する能力','超硬化能力'],a:2},
+  {type:'ox',q:'「ドラゴンボール」のベジータはサイヤ人の王子だ。',a:true},
+  {type:'4',q:'「ワンピース」でロビンが食べた悪魔の実はどれか？',c:['ハナハナの実','ドアドアの実','ゾオゾオの実','トゲトゲの実'],a:0},
+  {type:'ox',q:'「僕のヒーローアカデミア」のオールマイトの本名は八木俊典だ。',a:true},
+  {type:'4',q:'「NARUTO」でうちはイタチがサスケに施した幻術の名前はどれか？',c:['月読','神威','天照','須佐能乎'],a:0},
+  {type:'ox',q:'「進撃の巨人」のリヴァイ兵長は人類最強の兵士と呼ばれる。',a:true},
+  {type:'4',q:'「スラムダンク」で主人公・桜木花道のポジションはどれか？',c:['ポイントガード','パワーフォワード','センター','シューティングガード'],a:1},
+  {type:'ox',q:'「呪術廻戦」で五条悟の目は六眼と呼ばれる特別な目だ。',a:true},
+  {type:'4',q:'「鬼滅の刃」の炭治郎の妹・禰豆子が人間を守り続けた最大の理由はどれか？',c:['無惨の命令に従わなかったから','特別な一族の出身だから','家族への強い愛情と絆','鬼の血が薄かったから'],a:2},
+  {type:'ox',q:'「ドラゴンボール」でドラゴンボールを7つ集めると神龍が現れて願いを叶えてくれる。',a:true},
+  {type:'4',q:'「ワンピース」の「四皇」はどんな存在か？',c:['海軍本部の最高幹部4人','世界最強クラスの海賊4人を指す称号','4つの海の王者','世界政府の4人の元首'],a:1},
+  {type:'ox',q:'「Hunter×Hunter」でゴン=フリークスの念能力の系統は強化系だ。',a:true},
+  {type:'4',q:'「BLEACH」で黒崎一護が最初に戦った敵の種族は何か？',c:['死神','滅却師','虚（ホロウ）','完現術者'],a:2},
+  {type:'ox',q:'「テニスの王子様」に登場するSEIGAKUとは青春学園中等部テニス部の略称だ。',a:true},
+],
+shoujo:[
+  {type:'4',q:'「セーラームーン」の主人公・月野うさぎが変身するセーラー戦士の名前はどれか？',c:['セーラーマーズ','セーラーヴィーナス','セーラーサターン','セーラームーン'],a:3},
+  {type:'ox',q:'「CardCaptor Sakura」の主人公・木之本桜はクロウカードを集めるためにカードキャプターになった。',a:true},
+  {type:'4',q:'「フルーツバスケット」で草摩家の人々に隠された秘密は何か？',c:['全員が神様の子孫','十二支の動物に変身してしまう','呪いで感情が消えた','吸血鬼の一族'],a:1},
+  {type:'ox',q:'「魔法少女まどか☆マギカ」の脚本は虚淵玄が担当した。',a:true},
+  {type:'4',q:'「魔法少女まどか☆マギカ」で魔法少女が望みを叶えてもらう代わりに引き受けることは何か？',c:['不老不死','記憶を消される','感情を失う','魔女と戦い続ける運命'],a:3},
+  {type:'ox',q:'「ふしぎ遊戯」の主人公・雛子は本の世界に入り込んで四神の巫女になる。',a:true},
+  {type:'4',q:'「彼氏彼女の事情」の主人公・宮沢雪野の学校での姿と家での姿の違いはどれか？',c:['見た目は地味だが実は天才','優しい性格と冷酷な性格','人前では無口だが実は話し好き','学校では優等生だが家では素の自分をさらけ出す'],a:3},
+  {type:'ox',q:'「美少女戦士セーラームーン」のセーラームーンの武器にティアラがある。',a:true},
+  {type:'4',q:'「フルーツバスケット」の草摩由希が変身する動物はどれか？',c:['ウサギ','ウマ','ネコ','ネズミ'],a:3},
+  {type:'ox',q:'「CardCaptor Sakura」でさくらを助けるケルベロス（ケロちゃん）の本来の姿は巨大なライオンだ。',a:true},
+  {type:'4',q:'「ヴァイオレット・エヴァーガーデン」の主人公が行う「自動手記人形」の仕事は何か？',c:['手紙の代筆','料理の代行','歌のパフォーマンス','戦場での通信'],a:0},
+  {type:'ox',q:'「とらドラ！」の主人公コンビは高須竜児と逢坂大河だ。',a:true},
+  {type:'4',q:'「魔法少女まどか☆マギカ」でほむら・あかみの能力はどれか？',c:['時間を操る力','予知能力','炎を操る力','念力'],a:0},
+  {type:'ox',q:'「CLANNAD」はKeyが制作したゲームが原作の泣けるアニメだ。',a:true},
+  {type:'4',q:'「化物語」シリーズの主人公・阿良々木暦が最初に助けた女の子は誰か？',c:['戦場ヶ原ひたぎ','羽川翼','神原駿河','八九寺真宵'],a:0},
+  {type:'ox',q:'「Angel Beats!」の舞台は死後の世界にある学校だ。',a:true},
+  {type:'4',q:'「Re：ゼロから始める異世界生活」の主人公・ナツキ・スバルが持つ能力はどれか？',c:['無限の魔法力','予知夢','時間停止','死んだ時点に巻き戻る能力'],a:3},
+  {type:'ox',q:'「俺ガイル（やはり俺の青春ラブコメはまちがっている）」の主人公は比企谷八幡だ。',a:true},
+  {type:'4',q:'「あの日見た花の名前を僕達はまだ知らない」の通称はどれか？',c:['僕花','あの花','花名','あの日'],a:1},
+  {type:'ox',q:'「氷菓」の主人公・折木奉太郎のモットーはやらなくていいことはやらない「省エネ」だ。',a:true},
+  {type:'4',q:'「ご注文はうさぎですか？」の舞台はどこか？',c:['海辺のリゾート地','東京の学校','田舎の農村','ヨーロッパ風の街にあるカフェ'],a:3},
+  {type:'ox',q:'「クラスルームの暗殺者（暗殺教室）」で殺せんせーは担任教師として生徒に接する。',a:true},
+  {type:'4',q:'「なかよし」を発行している出版社はどこか？',c:['秋田書店','小学館','講談社','集英社'],a:2},
+  {type:'ox',q:'「マクロスΔ」に登場するアイドルグループの名前はウォーキューレだ。',a:true},
+  {type:'4',q:'「クリィミーマミ」の主人公が持つ変身能力で変身した姿は何をしている人か？',c:['歌手（アイドル）','女優','声優','モデル'],a:0},
+],
+scifi:[
+  {type:'4',q:'「新世紀エヴァンゲリオン」の主人公・碇シンジが乗るエヴァンゲリオンは何号機か？',c:['弐号機','初号機','参号機','零号機'],a:1},
+  {type:'ox',q:'「機動戦士ガンダム」の初代主人公はアムロ・レイだ。',a:true},
+  {type:'4',q:'「コードギアス」でルルーシュが持つ能力「ギアス」はどんな能力か？',c:['未来予知','時間を止める力','相手に絶対に従わせる命令を下せる力','テレパシー'],a:2},
+  {type:'ox',q:'「マクロス」シリーズでは歌が戦闘に重要な役割を果たす。',a:true},
+  {type:'4',q:'「天元突破グレンラガン」の主人公コンビはどれか？',c:['ルルーシュとスザク','シンジとレイ','アムロとシャア','シモンとカミナ'],a:3},
+  {type:'ox',q:'「攻殻機動隊」の主人公・草薙素子は全身義体のサイボーグだ。',a:true},
+  {type:'4',q:'「新世紀エヴァンゲリオン」でシンジとゲンドウの関係は何か？',c:['兄と弟','上司と部下','父と息子','師匠と弟子'],a:2},
+  {type:'ox',q:'「カウボーイビバップ」の主人公スパイク・スピーゲルは賞金稼ぎだ。',a:true},
+  {type:'4',q:'「コードギアス」で仮面の騎士「ゼロ」の正体は誰か？',c:['CC','シャーリー','スザク','ルルーシュ・ランペルージ'],a:3},
+  {type:'ox',q:'「コードギアス」でブリタニア帝国に支配された日本はエリア11と呼ばれる。',a:true},
+  {type:'4',q:'「新世紀エヴァンゲリオン」に登場する敵の総称は何か？',c:['悪魔','異形','使徒','天使'],a:2},
+  {type:'ox',q:'「攻殻機動隊」の世界観はサイバーパンクをベースにしている。',a:true},
+  {type:'4',q:'「天元突破グレンラガン」で「ドリル」が象徴するものはどれか？',c:['魂・熱血・可能性','愛情','未来への道','科学技術'],a:0},
+  {type:'ox',q:'「マクロスF」のシェリル・ノームとランカ・リーは歌手として登場する。',a:true},
+  {type:'4',q:'「フルメタル・パニック！」の主人公・相良宗介の本業は何か？',c:['探偵','学生','軍人（対テロ組織の兵士）','傭兵'],a:2},
+  {type:'ox',q:'「新世紀エヴァンゲリオン」の使徒の名前は旧約聖書の天使名に由来するものが多い。',a:true},
+  {type:'4',q:'「機動戦士ガンダム00」の主人公・刹那が搭乗するガンダムはどれか？',c:['キュリオス','ヴァーチェ','ダブルオー','エクシア'],a:3},
+  {type:'ox',q:'「銀河英雄伝説」は宇宙を舞台にした壮大なSF作品だ。',a:true},
+  {type:'4',q:'「SSSS.GRIDMAN」の主人公・響裕太を助けるグリッドマンが宿ったのはどこか？',c:['スマートフォン','テレビのアンテナ','古いパソコンのモニター','ゲーム機'],a:2},
+  {type:'ox',q:'「スクライド」の主人公・カズマは右腕を変化させるアルターを使う。',a:true},
+  {type:'4',q:'「伝説巨神イデオン」の監督は誰か？',c:['細田守','宮崎駿','富野由悠季','庵野秀明'],a:2},
+  {type:'ox',q:'「機動戦士ガンダム」ではニュータイプという特殊な感知能力を持つ人間が登場する。',a:true},
+  {type:'4',q:'「カウボーイビバップ」の舞台となる主な場所はどこか？',c:['地球のみ','太陽系全体（火星など）','月面都市','宇宙ステーション'],a:1},
+  {type:'ox',q:'「コードギアス」の主人公ルルーシュは頭脳戦を得意とするキャラクターだ。',a:true},
+  {type:'4',q:'「新世紀エヴァンゲリオン」でゲンドウが追い求めた「人類補完計画」とは何か？',c:['エヴァを完成させること','地球を守ること','使徒を全滅させること','人類を一つの存在に融合させること'],a:3},
+],
+nichijou:[
+  {type:'4',q:'「けいおん！」の主人公・平沢唯が軽音部で担当する楽器はどれか？',c:['ドラム','ギター','キーボード','ベース'],a:1},
+  {type:'ox',q:'「涼宮ハルヒの憂鬱」の主人公・涼宮ハルヒは自分が特別な存在であることを自覚している。',a:false},
+  {type:'4',q:'「涼宮ハルヒの憂鬱」でハルヒが作った部活の名前はどれか？',c:['SOS団','時間旅行部','超能力研究会','宇宙人倶楽部'],a:0},
+  {type:'ox',q:'「らき☆すた」の主人公・泉こなたはアニメとゲームが大好きなオタクキャラだ。',a:true},
+  {type:'4',q:'「ハイキュー!!」の主人公・日向翔陽が目標にする称号はどれか？',c:['コート上の支配者','最強スパイカー','空を飛ぶ天才','小さな巨人'],a:3},
+  {type:'ox',q:'「ハイキュー!!」は高校バレーボールを題材にしたスポーツアニメだ。',a:true},
+  {type:'4',q:'「俺ガイル（やはり俺の青春ラブコメはまちがっている）」の八幡の所属する部活はどれか？',c:['料理部','文芸部','軽音部','奉仕部'],a:3},
+  {type:'ox',q:'「氷菓」は米澤穂信の小説が原作で京都アニメーションが制作した。',a:true},
+  {type:'4',q:'「ゆるキャン△」のキャラクター・志摩リンが好きなアウトドア活動は何か？',c:['釣り','ソロキャンプ','サイクリング','登山'],a:1},
+  {type:'ox',q:'「けいおん！」の放課後ティータイムが文化祭で演奏した曲に「ふわふわ時間」がある。',a:true},
+  {type:'4',q:'「暗殺教室」の殺せんせーが教える生徒たちの目標は何か？',c:['全国学力テストで1位になる','卒業式に感動させる','殺せんせーを暗殺する','部活で全国優勝する'],a:2},
+  {type:'ox',q:'「ちびまる子ちゃん」の作者はさくらももこだ。',a:true},
+  {type:'4',q:'「らき☆すた」に登場するキャラクター・柊かがみの性格として最も近いのはどれか？',c:['天然でおとなしい','ツンデレで成績優秀','無口で謎めいた存在','明るくてスポーツ万能'],a:1},
+  {type:'ox',q:'「よりもい（宇宙よりも遠い場所）」の主人公たちが目指した場所は南極だ。',a:true},
+  {type:'4',q:'「ガールズ&パンツァー」の主人公・西住みほが転校した先の高校はどこか？',c:['大洗女子学園','サンダース大学附属高校','黒森峰女学園','プラウダ高校'],a:0},
+  {type:'ox',q:'「だがしかし」は駄菓子をテーマにしたアニメだ。',a:true},
+  {type:'4',q:'「NEW GAME!」の主人公・涼風青葉の夢はどれか？',c:['声優になる','プロゲーマーになる','ゲームキャラクターのデザイナーになる','マンガ家になる'],a:2},
+  {type:'ox',q:'「君の名は。」は新海誠監督の劇場アニメ作品だ。',a:true},
+  {type:'4',q:'「日常」でハカセ（東雲なの）が背中につけているゼンマイについて正しいのはどれか？',c:['作中で明確な説明はなく謎のまま','飾りにすぎない','動力源として機能する','感情を表現するアンテナ'],a:0},
+  {type:'ox',q:'「けいおん！」の舞台となった高校は滋賀県がモデルと言われている。',a:true},
+  {type:'4',q:'「スーパーダンガンロンパ2」の登場人物にもなるモノクマを動かしている首謀者は誰か？',c:['江ノ島盾子','霧切響子','日向創','苗木誠'],a:0},
+  {type:'ox',q:'「ガーリッシュナンバー」の主人公・烏丸千歳の職業は声優だ。',a:true},
+  {type:'4',q:'「クラスルームの暗殺者」の舞台となるクラスは何組か？',c:['3年C組','2年B組','3年E組','1年A組'],a:2},
+  {type:'ox',q:'「ゆるキャン△」の舞台は主に山梨県・静岡県周辺だ。',a:true},
+  {type:'4',q:'「らき☆すた」の柊かがみの双子の妹の名前はどれか？',c:['柊こよみ','柊みらい','柊ゆたか','柊つかさ'],a:3},
+],
+ghibli:[
+  {type:'4',q:'「となりのトトロ」でサツキとメイの父親の職業はどれか？',c:['医師','大学教授（考古学）','農家','小学校の先生'],a:1},
+  {type:'ox',q:'「千と千尋の神隠し」で千尋の両親は豚に変えられてしまう。',a:true},
+  {type:'4',q:'「風の谷のナウシカ」でナウシカが乗り回す小型飛行器の名前はどれか？',c:['ペジテ号','コルベット','メーヴェ','ガンシップ'],a:2},
+  {type:'ox',q:'「魔女の宅急便」の主人公・キキは黒猫のジジと一緒に旅をする。',a:true},
+  {type:'4',q:'「もののけ姫」の主人公・アシタカが呪いをかけられたのは何の動物か？',c:['熊','イノシシ（ナゴの守）','シシ神','オオカミ'],a:1},
+  {type:'ox',q:'「天空の城ラピュタ」でラピュタを復活させようとする悪役の名前はムスカだ。',a:true},
+  {type:'4',q:'「千と千尋の神隠し」で千尋が働く湯屋の名前はどれか？',c:['火屋','油屋','風屋','水屋'],a:1},
+  {type:'ox',q:'「ハウルの動く城」の原作はイギリス人作家ダイアナ・ウィン・ジョーンズの小説だ。',a:true},
+  {type:'4',q:'「もののけ姫」でモロの君が率いるのはどんな動物の群れか？',c:['熊','イノシシ','オオカミ','シカ'],a:2},
+  {type:'ox',q:'「風立ちぬ」の主人公・堀越二郎は実在の航空技術者をモデルにしている。',a:true},
+  {type:'4',q:'「耳をすませば」の主人公・月島雫が図書館で出会う少年は誰か？',c:['バロン','杉村','西老人','天沢聖司'],a:3},
+  {type:'ox',q:'「かぐや姫の物語」はスタジオジブリ制作で高畑勲が監督した。',a:true},
+  {type:'4',q:'「魔女の宅急便」でキキが住み込む街のモデルになったとされる国はどこか？',c:['スウェーデン（ストックホルム等）','イタリア','スペイン','フランス'],a:0},
+  {type:'ox',q:'「崖の上のポニョ」の舞台は海辺の町だ。',a:true},
+  {type:'4',q:'「おもひでぽろぽろ」の主人公・タエ子が旅した場所はどこか？',c:['山形県（農村）','北海道','沖縄','京都'],a:0},
+  {type:'ox',q:'「千と千尋の神隠し」はアカデミー賞長編アニメーション賞を受賞した。',a:true},
+  {type:'4',q:'「天空の城ラピュタ」でパズーとシータが唱えたラピュタを破壊する言葉はどれか？',c:['バルス','ムスカ','ラピュタ','レプカ'],a:0},
+  {type:'ox',q:'「風の谷のナウシカ」の腐海は汚染された土地を浄化するために存在していた。',a:true},
+  {type:'4',q:'「ハウルの動く城」でソフィーに魔法をかけて老婆にした魔女の名前はどれか？',c:['サリマン','ヒン','カルシファー','荒地の魔女'],a:3},
+  {type:'ox',q:'宮崎駿はスタジオジブリの共同創業者の一人だ。',a:true},
+  {type:'4',q:'「となりのトトロ」でトトロが住む場所はどこか？',c:['クスノキの中','竹林','洞窟の中','川の底'],a:0},
+  {type:'ox',q:'「もののけ姫」のサン（もののけ姫）は人間でありながら山犬に育てられた。',a:true},
+  {type:'4',q:'「紅の豚」の主人公・ポルコ・ロッソが操るのはどんな乗り物か？',c:['潜水艦','飛行艇（水上飛行機）','船','戦闘機'],a:1},
+  {type:'ox',q:'「アーヤと魔女」はスタジオジブリ初のフル3DCGアニメ作品だ。',a:true},
+  {type:'4',q:'「思い出のマーニー」の主人公・杏奈が出会う不思議な少女の名前はどれか？',c:['サツキ','マーニー','ナウシカ','ハク'],a:1},
+],
+classic:[
+  {type:'4',q:'「アルプスの少女ハイジ」でハイジが暮らすアルプスのおじいさんの呼び名はどれか？',c:['ペーター','おんじ（アルムおんじ）','ロッテンマイヤー先生','クララのパパ'],a:1},
+  {type:'ox',q:'「ドラえもん」の主人公・野比のび太は勉強と運動が苦手だ。',a:true},
+  {type:'4',q:'「サザエさん」に登場するイソノ家の父親の名前はどれか？',c:['カツオ','マスオ','波平（波野平吉）','フグ田'],a:2},
+  {type:'ox',q:'「銀河鉄道999」に登場するメーテルは謎の美しい女性として鉄郎の旅に同行する。',a:true},
+  {type:'4',q:'「名探偵コナン」の主人公・江戸川コナンの本当の名前はどれか？',c:['黒羽快斗','鈴木次郎吉','毛利蘭','工藤新一'],a:3},
+  {type:'ox',q:'「ちびまる子ちゃん」の舞台は静岡県清水市（現・静岡市清水区）だ。',a:true},
+  {type:'4',q:'「宇宙戦艦ヤマト」で地球を救うために向かった星はどれか？',c:['ラゼル','イスカンダル','ガミラス','メルダー星'],a:1},
+  {type:'ox',q:'「鉄腕アトム」の主人公・アトムは天馬博士が亡くなった息子をモデルに作ったロボットだ。',a:true},
+  {type:'4',q:'「キャプテン翼」の主人公・大空翼が目指す夢はどれか？',c:['国内リーグで得点王になる','オリンピックに出る','ワールドカップで世界一になる','プロ野球選手になる'],a:2},
+  {type:'ox',q:'「名探偵コナン」の黒の組織のボスは「あの方」と呼ばれ長らく正体が謎だった。',a:true},
+  {type:'4',q:'「ルパン三世」のルパン三世の祖父は誰か？',c:['石川五ェ門の師匠','怪盗アルセーヌ・ルパン','銭形警部の祖父','峰不二子の父'],a:1},
+  {type:'ox',q:'「タッチ」の主人公・上杉達也の弟・和也は野球の才能があったが若くして亡くなる。',a:true},
+  {type:'4',q:'「魔法使いサリー」は日本初の何アニメとされているか？',c:['ロボットアニメ','魔法少女アニメ','学園アニメ','スポーツアニメ'],a:1},
+  {type:'ox',q:'「ゲゲゲの鬼太郎」の主人公・鬼太郎の父親は目玉おやじだ。',a:true},
+  {type:'4',q:'「機動戦士ガンダム」が最初に放送されたのはいつか？',c:['1985年','1982年','1979年','1975年'],a:2},
+  {type:'ox',q:'「美少女戦士セーラームーン」のアニメは1992年にスタートした。',a:true},
+  {type:'4',q:'「Dr.スランプ アラレちゃん」のアラレちゃんが住む村の名前はどれか？',c:['ひまわり村','ペンギン村','タコ村','ロボット村'],a:1},
+  {type:'ox',q:'「ドラえもん」の四次元ポケットはおなかにある。',a:true},
+  {type:'4',q:'「北斗の拳」の主人公・ケンシロウが使う格闘技の名前はどれか？',c:['南斗水鳥拳','天才拳','北斗神拳','修羅拳'],a:2},
+  {type:'ox',q:'「あしたのジョー」の主人公・矢吹丈はボクサーだ。',a:true},
+  {type:'4',q:'「ルパン三世 カリオストロの城」は宮崎駿が監督した映画だ。',c:['半分正しい','間違い','正しい','不明'],a:2},
+  {type:'ox',q:'「タッチ」の作者はあだち充だ。',a:true},
+  {type:'4',q:'「花より男子」の主人公・牧野つくしが通う学校の名前はどれか？',c:['桜蘭高校','青音大学付属高校','英徳学園','聖夜高校'],a:2},
+  {type:'ox',q:'「キャプテン翼」で大空翼の親友・若島津健はゴールキーパーだ。',a:true},
+  {type:'4',q:'「宇宙戦艦ヤマト」でヤマトの艦長・沖田十三が抱える病は何か？',c:['戦傷による後遺症','心臓病','宇宙病','放射線病（難病）'],a:3},
+],
+};
+let currentGenre=null,questions=[],qIndex=0,score=0,correctCount=0,wrongCount=0;
+let timeLeft=120,timer=null,answered=false,wrongAnswers=[],playerName='';
+let currentRankingGenre=null;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function showToast(msg,d=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+function buildGenreCards(){
+  const grid=document.getElementById('genres-grid');
+  grid.innerHTML=GENRES.map(g=>`<div class="genre-card" onclick="selectGenre('${g.id}')"><div class="genre-accent" style="background:${g.color};"></div><span class="genre-icon">${g.icon}</span><div class="genre-name">${g.name}</div><div class="genre-desc">${g.desc}</div><div class="genre-count">全${DB[g.id].length}問収録 ／ 10問ランダム出題</div><span class="genre-start">▶ START</span></div>`).join('');
+}
+function selectGenre(id){
+  currentGenre=GENRES.find(g=>g.id===id);
+  document.getElementById('intro-icon').textContent=currentGenre.icon;
+  document.getElementById('intro-name').textContent=currentGenre.name;
+  document.getElementById('intro-desc').textContent=currentGenre.desc;
+  if(window.TomyStamp){const saved=TomyStamp.getPlayer();const inp=document.getElementById('name-input');if(saved&&!inp.value)inp.value=saved;}
+  showScreen('screen-intro');
+}
+function startGame(){
+  playerName=document.getElementById('name-input').value.trim()||'ゲスト';
+  if(window.TomyStamp&&playerName!=='ゲスト')TomyStamp.setPlayer(playerName);
+  questions=shuffle(DB[currentGenre.id]).slice(0,10);
+  qIndex=0;score=0;correctCount=0;wrongCount=0;wrongAnswers=[];
+  showScreen('screen-quiz');showQuestion();startTimer();
+}
+function retryGame(){showScreen('screen-intro');}
+function startTimer(){clearInterval(timer);timeLeft=120;updateTimerDisplay();timer=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timer);endGame();}},1000);}
+function updateTimerDisplay(){const el=document.getElementById('quiz-timer');el.textContent=timeLeft;el.className='quiz-timer'+(timeLeft<=10?' danger':'');}
+function showQuestion(){
+  const q=questions[qIndex];answered=false;
+  document.getElementById('quiz-qnum').textContent=`Q${qIndex+1} / 10`;
+  document.getElementById('quiz-progress-fill').style.width=`${(qIndex/10)*100}%`;
+  document.getElementById('quiz-score').textContent=`${score} pt`;
+  document.getElementById('feedback-bar').className='feedback-bar';
+  document.getElementById('feedback-bar').textContent='';
+  document.getElementById('next-btn').className='next-btn';
+  if(q.type==='4'){
+    document.getElementById('quiz-type-badge').textContent='4択';
+    document.getElementById('quiz-type-badge').className='quiz-type-badge type-4';
+    document.getElementById('quiz-q').textContent=q.q;
+    const lb=['A','B','C','D'];
+    document.getElementById('quiz-choices').innerHTML=q.c.map((c,i)=>`<button class="choice-btn" onclick="answer4(${i})"><span class="choice-label">${lb[i]}</span>${c}</button>`).join('');
+  }else{
+    document.getElementById('quiz-type-badge').textContent='○×';
+    document.getElementById('quiz-type-badge').className='quiz-type-badge type-ox';
+    document.getElementById('quiz-q').textContent=q.q;
+    document.getElementById('quiz-choices').innerHTML=`<div class="ox-choices"><button class="ox-btn" onclick="answerOX(true)">⭕<span>正しい</span></button><button class="ox-btn" onclick="answerOX(false)">❌<span>誤り</span></button></div>`;
+  }
+}
+function answer4(idx){if(answered)return;answered=true;const q=questions[qIndex];const btns=document.querySelectorAll('.choice-btn');btns.forEach(b=>b.disabled=true);btns[q.a].classList.add('correct');if(idx!==q.a)btns[idx].classList.add('wrong');processAnswer(idx===q.a,q.c[q.a],q.q);}
+function answerOX(val){if(answered)return;answered=true;const q=questions[qIndex];const btns=document.querySelectorAll('.ox-btn');btns.forEach(b=>b.disabled=true);btns[q.a?0:1].classList.add('correct');if(val!==q.a)btns[val?0:1].classList.add('wrong');processAnswer(val===q.a,q.a?'○（正しい）':'×（誤り）',q.q);}
+function processAnswer(isCorrect,correctAns,qText){
+  const fb=document.getElementById('feedback-bar');
+  if(isCorrect){score+=10;correctCount++;timeLeft=Math.min(timeLeft+5,999);fb.textContent='✅ 正解！ ＋5秒';fb.className='feedback-bar ok show';}
+  else{wrongCount++;timeLeft=Math.max(timeLeft-5,0);fb.textContent=`❌ 正解は「${correctAns}」（−5秒）`;fb.className='feedback-bar ng show';wrongAnswers.push({q:qText,a:correctAns});}
+  updateTimerDisplay();document.getElementById('next-btn').className='next-btn show';
+}
+function nextQuestion(){qIndex++;if(qIndex>=10){clearInterval(timer);endGame();}else{showQuestion();}}
+function endGame(){
+  clearInterval(timer);
+  const bonus=Math.max(timeLeft,0),total=score+bonus;
+  const medal=correctCount>=9?'🥇':correctCount>=7?'🥈':correctCount>=5?'🥉':'😅';
+  document.getElementById('result-genre').textContent=currentGenre.icon+' '+currentGenre.name;
+  document.getElementById('result-score').textContent=total;
+  document.getElementById('result-medal').textContent=medal;
+  document.getElementById('result-correct').textContent=correctCount;
+  document.getElementById('result-wrong').textContent=wrongCount;
+  document.getElementById('result-bonus').textContent='+'+bonus;
+  const ws=document.getElementById('wrong-section');
+  if(wrongAnswers.length>0){ws.innerHTML=`<div class="wrong-label">// ❌ 間違えた問題（${wrongAnswers.length}問）</div>`+wrongAnswers.map((w,i)=>`<div class="wrong-item"><div class="wrong-item-num">問${i+1}</div><div class="wrong-item-q">${w.q}</div><div class="wrong-item-ans"><span class="wrong-item-ans-label">正解</span><span class="wrong-item-ans-text">${w.a}</span></div></div>`).join('');}
+  else{ws.innerHTML='<div style=\'text-align:center;padding:20px;font-family:\'Share Tech Mono\',monospace;font-size:12px;color:var(--purple3);\'>🎉 全問正解！</div>';}
+  saveRanking(currentGenre.id,playerName,total,correctCount);
+  if(window.TomyStamp&&playerName!=='ゲスト'){TomyStamp.send('anime-quiz',currentGenre.name,correctCount).then(r=>{if(r.ok)showToast('⭐ スタンプ獲得！ランキングに反映されます');});}
+  showScreen('screen-result');
+}
+const LS_KEY='anime_quiz_jp_ranking';
+function saveRanking(gId,name,sc,correct){const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');if(!data[gId])data[gId]=[];data[gId].push({name,score:sc,correct,date:new Date().toLocaleDateString('ja-JP')});data[gId].sort((a,b)=>b.score-a.score);data[gId]=data[gId].slice(0,20);localStorage.setItem(LS_KEY,JSON.stringify(data));}
+function showRanking(){const tabs=document.getElementById('ranking-tabs');tabs.innerHTML=GENRES.map(g=>`<button class="ranking-tab" onclick="switchRankingTab('${g.id}',this)">${g.icon} ${g.name}</button>`).join('');showScreen('screen-ranking');switchRankingTab(GENRES[0].id,tabs.querySelector('.ranking-tab'));}
+function switchRankingTab(id,btn){document.querySelectorAll('.ranking-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');currentRankingGenre=id;renderRanking(id);}
+function renderRanking(id){const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');const rows=data[id]||[];const list=document.getElementById('ranking-list');if(!rows.length){list.innerHTML='<div class="ranking-empty">// まだ記録がありません</div>';return;}list.innerHTML=rows.map((r,i)=>{const pos=i+1,pc=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';const rc=pos===1?'top1':pos===2?'top2':pos===3?'top3':'';return `<div class="ranking-row ${rc}"><span class="ranking-pos ${pc}">${pos}</span><span class="ranking-name">${r.name}</span><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);">${r.correct}/10</span><span class="ranking-score">${r.score}</span><span class="ranking-date">${r.date}</span></div>`;}).join('');}
+function deleteRanking(){if(!currentRankingGenre)return;if(!confirm(`「${GENRES.find(g=>g.id===currentRankingGenre)?.name}」の記録を削除しますか？`))return;const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');delete data[currentRankingGenre];localStorage.setItem(LS_KEY,JSON.stringify(data));renderRanking(currentRankingGenre);}
+buildGenreCards();
+</script>
+</body>
+</html>
