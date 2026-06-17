@@ -2,604 +2,1167 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎌 アニメクイズ（日本編）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>アニメクイズ（日本編）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script src="https://pecpec37-gift.github.io/portal/stamp.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Yusei+Magic&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0820;--bg2:#160c2e;--surface:#1c1038;--surface2:#261848;--border:rgba(168,85,247,0.18);--purple:#9333ea;--purple2:#a855f7;--purple3:#d8b4fe;--pink:#ec4899;--pink2:#f9a8d4;--gold:#f59e0b;--gold2:#fde68a;--green:#10b981;--red:#ef4444;--text:#faf0ff;--text2:rgba(250,240,255,0.7);--text3:rgba(250,240,255,0.38);--radius:6px;}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 10%,rgba(147,51,234,0.12) 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,rgba(236,72,153,0.08) 0%,transparent 50%);pointer-events:none;z-index:0;}
-.screen{display:none;position:relative;z-index:1;}.screen.active{display:block;}
-#screen-top{min-height:100vh;}
-.top-hero{background:linear-gradient(160deg,#160830 0%,#0e0820 55%,#080514 100%);padding:52px 24px 44px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.top-hero::before{content:'🎌';position:absolute;right:-10px;bottom:-20px;font-size:180px;opacity:0.04;pointer-events:none;}
-.top-hero::after{content:'✨';position:absolute;left:10px;top:10px;font-size:120px;opacity:0.035;pointer-events:none;}
-.top-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.22em;color:var(--purple2);text-transform:uppercase;margin-bottom:12px;}
-.top-title{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:clamp(32px,7vw,60px);line-height:1.1;color:var(--text);margin-bottom:8px;}
-.top-title span{background:linear-gradient(90deg,var(--purple2),var(--pink2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.top-sub{font-size:13px;color:var(--text2);letter-spacing:0.06em;margin-bottom:28px;}
-.top-rule{display:inline-block;background:rgba(147,51,234,0.08);border:1px solid rgba(147,51,234,0.22);border-radius:6px;padding:14px 20px;text-align:left;font-size:12px;line-height:2;color:var(--text2);}
-.top-rule strong{color:var(--purple3);}
-.genres-wrap{max-width:920px;margin:0 auto;padding:32px 20px 20px;}
-.genres-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.genres-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.genres-hint{font-size:12px;color:var(--pink2);background:rgba(236,72,153,0.07);border:1px solid rgba(236,72,153,0.2);border-radius:4px;padding:8px 14px;margin-bottom:20px;text-align:center;letter-spacing:0.04em;}
-.genres-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:24px;}
-.genre-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s,border-color 0.12s;position:relative;overflow:hidden;}
-.genre-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(147,51,234,0.07),transparent);opacity:0;transition:opacity 0.15s;}
-.genre-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.5);border-color:rgba(168,85,247,0.5);}
-.genre-card:hover::before{opacity:1;}
-.genre-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:6px 6px 0 0;}
-.genre-icon{font-size:30px;line-height:1;margin-bottom:8px;display:block;}
-.genre-name{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:16px;margin-bottom:4px;color:var(--text);}
-.genre-desc{font-size:11px;color:var(--text3);margin-bottom:4px;line-height:1.6;}
-.genre-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;}
-.genre-start{position:absolute;top:14px;right:14px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--purple2);opacity:0;transition:opacity 0.15s;}
-.genre-card:hover .genre-start{opacity:1;}
-.ranking-btn-wrap{text-align:center;padding:8px 0 36px;}
-.ranking-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.12em;padding:10px 24px;background:none;border:1px solid var(--border);color:var(--text3);border-radius:3px;cursor:pointer;transition:all 0.15s;}
-.ranking-btn:hover{border-color:var(--gold2);color:var(--gold2);}
-#screen-intro{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;}
-#screen-intro.active{display:flex;}
-.intro-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px 28px;width:100%;max-width:420px;text-align:center;}
-.intro-icon{font-size:52px;margin-bottom:10px;display:block;}
-.intro-name{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:24px;margin-bottom:4px;color:var(--purple3);}
-.intro-desc{font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.7;}
-.intro-rule{font-size:12px;line-height:1.9;color:var(--text2);text-align:left;background:rgba(147,51,234,0.07);border-radius:6px;padding:12px 14px;margin-bottom:20px;}
-.intro-rule strong{color:var(--purple3);}
-.name-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:6px;text-align:left;}
-.name-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;margin-bottom:16px;outline:none;transition:border-color 0.15s;}
-.name-input:focus{border-color:var(--purple2);}
-.name-input::placeholder{color:var(--text3);}
-.start-btn{width:100%;padding:14px;background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity 0.15s,transform 0.1s;letter-spacing:0.04em;}
-.start-btn:hover{opacity:0.88;}
-.start-btn:active{transform:scale(0.98);}
-.back-link{margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;transition:color 0.15s;background:none;border:none;}
-.back-link:hover{color:var(--text);}
-#screen-quiz{min-height:100vh;}
-.quiz-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:10;}
-.quiz-progress{flex:1;height:3px;background:rgba(147,51,234,0.15);border-radius:2px;overflow:hidden;min-width:60px;}
-.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px;transition:width 0.3s;}
-.quiz-qnum{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);white-space:nowrap;letter-spacing:0.08em;}
-.quiz-score{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--purple3);white-space:nowrap;}
-.quiz-timer-wrap{display:flex;align-items:center;gap:5px;}
-.quiz-timer{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:22px;color:var(--purple3);min-width:40px;text-align:right;transition:color 0.3s;}
-.quiz-timer.danger{color:#ef4444;animation:pulse 0.5s infinite alternate;}
-@keyframes pulse{from{opacity:1;}to{opacity:0.5;}}
-.quiz-timer-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:0.1em;}
-.quiz-body{max-width:640px;margin:0 auto;padding:28px 20px 40px;}
-.quiz-type-badge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.16em;padding:3px 10px;border-radius:3px;display:inline-block;margin-bottom:14px;text-transform:uppercase;}
-.quiz-type-badge.type-4{background:rgba(147,51,234,0.15);color:var(--purple2);}
-.quiz-type-badge.type-ox{background:rgba(16,185,129,0.12);color:#34d399;}
-.quiz-q{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:clamp(16px,4vw,20px);line-height:1.65;margin-bottom:22px;color:var(--text);}
-.choices{display:flex;flex-direction:column;gap:10px;}
-.choice-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;text-align:left;font-family:'Noto Sans JP',sans-serif;font-size:14px;color:var(--text);cursor:pointer;transition:all 0.12s;display:flex;align-items:center;gap:12px;}
-.choice-btn:hover:not(:disabled){background:var(--surface2);border-color:rgba(168,85,247,0.5);transform:translateX(4px);}
-.choice-btn:disabled{cursor:default;}
-.choice-btn.correct{background:rgba(16,185,129,0.15);border-color:#10b981;color:#34d399;}
-.choice-btn.wrong{background:rgba(239,68,68,0.12);border-color:#ef4444;color:#f87171;}
-.choice-label{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);min-width:20px;}
-.ox-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.ox-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 16px;font-size:38px;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;}
-.ox-btn span{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;}
-.ox-btn:hover:not(:disabled){transform:scale(1.03);border-color:rgba(168,85,247,0.5);}
-.ox-btn:disabled{cursor:default;}
-.ox-btn.correct{background:rgba(16,185,129,0.15);border-color:#10b981;}
-.ox-btn.wrong{background:rgba(239,68,68,0.12);border-color:#ef4444;}
-.feedback-bar{margin-top:14px;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:700;opacity:0;transition:opacity 0.2s;min-height:44px;}
-.feedback-bar.show{opacity:1;}
-.feedback-bar.ok{background:rgba(16,185,129,0.1);color:#34d399;border:1px solid rgba(16,185,129,0.28);}
-.feedback-bar.ng{background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.22);}
-.next-btn{margin-top:14px;width:100%;padding:12px;background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:15px;border:none;border-radius:6px;cursor:pointer;transition:opacity 0.15s;display:none;}
-.next-btn.show{display:block;}
-.next-btn:hover{opacity:0.88;}
-#screen-result{min-height:100vh;display:none;flex-direction:column;align-items:center;padding:40px 20px 60px;}
-#screen-result.active{display:flex;}
-.result-box{width:100%;max-width:520px;}
-.result-genre{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:8px;text-align:center;}
-.result-score-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px;text-align:center;margin-bottom:20px;}
-.result-medal{font-size:48px;margin-bottom:8px;display:block;}
-.result-score{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:64px;line-height:1;background:linear-gradient(90deg,var(--purple2),var(--pink2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.result-score-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--text3);margin-bottom:16px;text-transform:uppercase;}
-.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
-.result-stat{background:var(--bg2);border-radius:6px;padding:12px 8px;text-align:center;}
-.result-stat-val{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:24px;color:var(--purple3);}
-.result-stat-val.green{color:#34d399;}
-.result-stat-val.gold{color:var(--gold2);}
-.result-stat-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
-.result-actions{display:flex;gap:10px;margin-bottom:24px;}
-.result-btn{flex:1;padding:12px;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:14px;border-radius:6px;cursor:pointer;transition:all 0.15s;}
-.result-btn-primary{background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;border:none;}
-.result-btn-primary:hover{opacity:0.88;}
-.result-btn-secondary{background:none;color:var(--text2);border:1px solid var(--border);}
-.result-btn-secondary:hover{border-color:var(--purple2);color:var(--purple2);}
-.wrong-section{width:100%;max-width:520px;}
-.wrong-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.wrong-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;}
-.wrong-item-num{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text3);margin-bottom:6px;}
-.wrong-item-q{font-size:14px;line-height:1.6;color:var(--text);margin-bottom:10px;font-weight:700;}
-.wrong-item-ans{display:flex;align-items:flex-start;gap:8px;font-size:13px;}
-.wrong-item-ans-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:#10b981;background:rgba(16,185,129,0.1);padding:2px 7px;border-radius:2px;white-space:nowrap;margin-top:1px;}
-.wrong-item-ans-text{color:#34d399;line-height:1.5;}
-.portal-back{display:block;text-align:center;margin-top:28px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.1em;color:var(--text3);text-decoration:none;padding:10px 20px;border:1px solid var(--border);border-radius:3px;transition:all 0.15s;}
-.portal-back:hover{border-color:var(--purple2);color:var(--purple2);}
-#screen-ranking{min-height:100vh;padding:40px 20px 60px;}
-.ranking-wrap{max-width:600px;margin:0 auto;}
-.ranking-top{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
-.ranking-title{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:22px;color:var(--gold2);flex:1;}
-.ranking-back{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:3px;padding:6px 14px;cursor:pointer;transition:all 0.15s;}
-.ranking-back:hover{border-color:var(--gold2);color:var(--gold2);}
-.ranking-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px;border-bottom:1px solid var(--border);}
-.ranking-tabs::-webkit-scrollbar{display:none;}
-.ranking-tab{flex-shrink:0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;padding:10px 12px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.ranking-tab.active{color:var(--purple2);border-bottom-color:var(--purple2);}
-.ranking-list{display:flex;flex-direction:column;gap:6px;}
-.ranking-empty{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);text-align:center;padding:32px;letter-spacing:0.1em;}
-.ranking-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;}
-.ranking-row.top1{border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.05);}
-.ranking-row.top2{border-color:rgba(200,200,200,0.25);}
-.ranking-row.top3{border-color:rgba(180,100,30,0.3);}
-.ranking-pos{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:18px;min-width:28px;color:var(--text3);}
-.ranking-pos.gold{color:#f59e0b;}.ranking-pos.silver{color:#9ca3af;}.ranking-pos.bronze{color:#b45309;}
-.ranking-name{flex:1;font-size:14px;font-weight:700;color:var(--text);}
-.ranking-score{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:20px;color:var(--purple3);}
-.ranking-date{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-left:6px;}
-.ranking-del{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 8px;margin-top:12px;font-family:'Share Tech Mono',monospace;letter-spacing:0.08em;transition:color 0.15s;}
-.ranking-del:hover{color:#ef4444;}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);color:var(--purple3);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 20px;border-radius:6px;border:1px solid var(--purple);z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.portal-fixed-btn{position:fixed;bottom:20px;left:20px;z-index:9999;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(14,8,32,0.92);color:var(--purple3);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.08em;border-radius:4px;border:1px solid rgba(147,51,234,0.35);text-decoration:none;backdrop-filter:blur(6px);box-shadow:0 4px 16px rgba(0,0,0,0.5);transition:all 0.15s;white-space:nowrap;}
-.portal-fixed-btn:hover{background:rgba(14,8,32,0.98);border-color:rgba(168,85,247,0.7);transform:translateY(-1px);}
-@media(max-width:480px){.genres-grid{grid-template-columns:1fr 1fr;}.result-actions{flex-direction:column;}.portal-fixed-btn{bottom:14px;left:14px;padding:8px 14px;font-size:11px;}}
-/* ===== 早押し: タイプライター & バザー ===== */
-.cursor-blink{display:inline-block;width:3px;height:1.05em;background:var(--purple2);vertical-align:text-bottom;margin-left:2px;animation:caret 0.6s ease-in-out infinite;}
-@keyframes caret{0%,100%{opacity:1;}50%{opacity:0;}}
-.quiz-q{min-height:84px;}
-.buzzer-btn{margin-top:8px;width:100%;padding:18px;border:none;border-radius:10px;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:18px;letter-spacing:0.05em;color:#fff;cursor:pointer;background:linear-gradient(90deg,var(--pink),var(--purple));box-shadow:0 6px 24px rgba(236,72,153,0.4);animation:buzz 1s ease-in-out infinite;transition:transform 0.1s;}
-.buzzer-btn:active{transform:scale(0.96);animation:none;}
-@keyframes buzz{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+  :root{
+    --bg:#0b0a0c;
+    --bg2:#171115;
+    --bg3:#221219;
+    --red:#ff0033;
+    --red-soft:#ff6b86;
+    --red-deep:#c20026;
+    --gold:#ffce3a;
+    --gold-soft:#ffe08a;
+    --white:#f5f3f4;
+    --dim:#b3a9af;
+    --green:#3fcf86;
+    --shadow:rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Noto Sans JP',sans-serif;
+    background:radial-gradient(120% 80% at 50% -10%,#2a0a14 0%,var(--bg) 60%);
+    color:var(--white);
+    min-height:100dvh;
+    overflow-x:hidden;
+    position:relative;
+  }
+  #bgCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.85;pointer-events:none;}
+  .wrap{
+    position:relative;z-index:1;
+    max-width:680px;margin:0 auto;
+    padding:clamp(12px,3.5vw,28px) clamp(12px,4vw,24px) 48px;
+    min-height:100dvh;
+  }
+  .screen{display:none;animation:fade .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* ===== 早押し: 正誤オーバーレイ ===== */
-.result-overlay{display:none;position:fixed;inset:0;z-index:9990;justify-content:center;align-items:center;padding:20px;}
-.result-overlay.show{display:flex;}
-.result-overlay::before{content:'';position:absolute;inset:0;background:rgba(8,4,18,0.85);backdrop-filter:blur(4px);}
-.result-box-ov{position:relative;z-index:1;background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:30px 26px;max-width:420px;width:100%;text-align:center;animation:popIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275);}
-.result-box-ov.correct{border-color:var(--green);box-shadow:0 0 40px rgba(16,185,129,0.3);}
-.result-box-ov.incorrect{border-color:var(--red);box-shadow:0 0 40px rgba(239,68,68,0.3);}
-@keyframes popIn{from{transform:scale(0.6);opacity:0;}50%{transform:scale(1.08);}to{transform:scale(1);opacity:1;}}
-.result-emoji{font-size:52px;margin-bottom:8px;}
-.result-label-ov{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:26px;margin-bottom:14px;}
-.result-box-ov.correct .result-label-ov{color:#34d399;}
-.result-box-ov.incorrect .result-label-ov{color:#f87171;}
-.result-ans-show{background:var(--bg2);border-radius:10px;padding:14px;margin-bottom:14px;text-align:left;}
-.result-ans-q{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
-.result-ans-a{font-size:18px;font-weight:900;color:var(--purple3);}
-.result-feedback{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px;}
-.result-feedback .hl{font-weight:900;}
-.result-feedback .hl.plus{color:#34d399;}
-.result-feedback .hl.minus{color:#f87171;}
-#ov-next-btn{margin-top:0;}
-#toast.ok{border-color:var(--green);color:#6ee7b7;}
-#toast.ng{border-color:var(--red);color:#fca5a5;}
+  /* ===== Header / Title ===== */
+  .crest{text-align:center;margin-bottom:clamp(14px,3vw,22px);}
+  .crest .seal{
+    display:inline-block;font-size:clamp(11px,2.8vw,13px);letter-spacing:.22em;
+    color:var(--red-soft);border:1px solid var(--red);border-radius:30px;
+    padding:5px 16px;margin-bottom:16px;background:rgba(255,0,51,.08);
+    box-shadow:0 0 14px rgba(255,0,51,.25);font-weight:700;
+  }
+  h1{
+    font-family:'Dela Gothic One',sans-serif;
+    font-size:clamp(30px,9.5vw,56px);font-weight:400;margin:0;line-height:1.1;letter-spacing:.005em;
+    color:var(--white);
+    text-shadow:0 0 22px rgba(255,0,51,.45),0 0 40px rgba(255,206,58,.12);
+  }
+  h1 .yt{color:var(--red);text-shadow:0 0 18px rgba(255,0,51,.7);}
+  h1 .dojo{color:var(--gold);text-shadow:0 0 18px rgba(255,206,58,.6);}
+  .subtitle{margin-top:14px;color:var(--dim);font-size:clamp(13px,3.4vw,16px);letter-spacing:.04em;line-height:1.6;}
+  .datenote{
+    display:inline-block;margin-top:12px;font-size:clamp(11px,3vw,13px);font-weight:700;
+    color:var(--gold-soft);background:rgba(255,206,58,.08);border:1px solid rgba(255,206,58,.3);
+    border-radius:30px;padding:6px 15px;letter-spacing:.03em;
+  }
+
+  .howto{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid rgba(255,0,51,.28);border-radius:16px;
+    padding:clamp(14px,3.5vw,20px);margin:clamp(16px,4vw,26px) 0;
+    box-shadow:0 6px 22px var(--shadow);
+  }
+  .howto h3{margin:0 0 10px;color:var(--red-soft);font-size:clamp(15px,3.8vw,17px);font-weight:900;letter-spacing:.04em;}
+  .howto ul{margin:0;padding-left:1.2em;line-height:1.9;font-size:clamp(13px,3.4vw,15px);color:#ece6e9;}
+  .howto ul b{color:var(--gold-soft);}
+  .howto .tap-hint{
+    margin-top:14px;text-align:center;font-weight:700;color:var(--red-soft);
+    font-size:clamp(15px,4vw,18px);letter-spacing:.03em;font-family:'Yusei Magic',sans-serif;
+  }
+  .howto .tap-hint span{display:inline-block;animation:pulse 1.5s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.9;}50%{transform:scale(1.07);opacity:1;}}
+
+  .section-label{
+    text-align:center;color:var(--red-soft);font-size:clamp(13px,3.4vw,15px);
+    letter-spacing:.2em;margin:6px 0 14px;font-weight:700;
+  }
+  .section-label::before,.section-label::after{content:"—　";color:rgba(255,0,51,.5);}
+  .section-label::after{content:"　—";}
+
+  /* ===== Genre cards ===== */
+  .genres{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(10px,2.6vw,14px);}
+  .gcard{
+    background:linear-gradient(155deg,#27141b,#1a0f14);
+    border:1px solid rgba(255,0,51,.28);border-radius:16px;
+    padding:clamp(16px,4vw,22px) clamp(10px,3vw,16px) clamp(22px,4.6vw,26px);
+    cursor:pointer;text-align:center;position:relative;overflow:hidden;
+    transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .gcard:active{transform:scale(.97);}
+  .gcard:hover{border-color:var(--red);box-shadow:0 8px 24px var(--shadow),0 0 0 1px rgba(255,0,51,.25) inset;}
+  .gcard .ji{font-size:clamp(32px,9.5vw,46px);line-height:1;filter:drop-shadow(0 2px 10px rgba(255,0,51,.35));}
+  .gcard .nm{margin-top:8px;font-weight:900;font-size:clamp(13px,3.7vw,16px);color:var(--white);}
+  .gcard .ct{margin-top:4px;font-size:11px;color:var(--dim);}
+  .gcard::after{content:"クリックで即スタート";position:absolute;left:0;right:0;bottom:7px;font-size:10px;color:var(--red-soft);opacity:.9;letter-spacing:.04em;}
+
+  .footer-row{display:flex;justify-content:center;margin-top:26px;}
+  .btn{
+    font-family:'Noto Sans JP',sans-serif;font-weight:700;cursor:pointer;border:none;
+    border-radius:11px;padding:13px 22px;font-size:15px;transition:transform .12s ease,filter .2s ease;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn-ghost{background:transparent;border:1px solid var(--dim);color:var(--dim);}
+  .btn-ghost:hover{border-color:var(--red-soft);color:var(--red-soft);}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#e0a91f);color:#2a1f04;box-shadow:0 5px 18px rgba(255,206,58,.32);}
+  .btn-crimson{background:linear-gradient(135deg,var(--red),var(--red-deep));color:#fff;box-shadow:0 5px 18px rgba(255,0,51,.38);}
+  .btn-block{width:100%;}
+
+  /* ===== Modal ===== */
+  .modal-bg{
+    position:fixed;inset:0;z-index:50;background:rgba(6,4,6,.8);
+    display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);
+  }
+  .modal-bg.show{display:flex;animation:fade .25s ease;}
+  .modal{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid var(--red);border-radius:20px;max-width:380px;width:100%;
+    padding:26px 22px;text-align:center;box-shadow:0 18px 54px rgba(0,0,0,.65);
+  }
+  .modal .ji{font-size:56px;line-height:1;}
+  .modal h2{margin:10px 0 4px;font-size:22px;font-weight:900;}
+  .modal p{margin:6px 0 0;color:var(--dim);font-size:14px;line-height:1.7;}
+  .modal .rules{margin:16px 0 20px;font-size:13px;color:#ece6e9;line-height:1.85;background:rgba(0,0,0,.22);border-radius:10px;padding:12px;}
+  .modal-btns{display:flex;gap:10px;}
+  .modal-btns .btn{flex:1;}
+
+  /* ===== Quiz ===== */
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;}
+  .hud .pill{
+    background:rgba(0,0,0,.32);border:1px solid rgba(255,0,51,.3);border-radius:30px;
+    padding:8px 16px;font-weight:700;font-size:clamp(13px,3.6vw,15px);
+  }
+  .hud .pill .lab{color:var(--dim);font-size:11px;margin-right:6px;font-weight:500;}
+  .hud .score-pill{color:var(--gold);}
+  .hud .time-pill{color:var(--white);}
+  .hud .time-pill.warn{color:var(--red-soft);animation:blink .8s steps(2,end) infinite;}
+  @keyframes blink{50%{opacity:.4;}}
+  .timebar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px;}
+  .timebar .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red-soft),var(--red));width:100%;transition:width 1s linear;}
+  .progress{text-align:center;font-size:12px;color:var(--dim);margin-bottom:14px;letter-spacing:.1em;}
+
+  .qcard{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid rgba(255,0,51,.25);border-radius:18px;
+    padding:clamp(18px,5vw,30px) clamp(16px,4.5vw,26px);box-shadow:0 8px 28px var(--shadow);
+    min-height:230px;display:flex;flex-direction:column;
+  }
+  .qtag{
+    display:inline-block;font-size:11px;letter-spacing:.12em;color:var(--red-soft);
+    border:1px solid rgba(255,0,51,.4);border-radius:30px;padding:3px 12px;margin-bottom:14px;font-weight:700;
+  }
+  .qtype{float:right;font-size:11px;color:var(--dim);margin-top:4px;}
+  .qtext{
+    font-size:clamp(17px,4.8vw,22px);font-weight:700;line-height:1.7;margin-bottom:4px;
+    min-height:2.4em;transition:opacity .3s ease;
+  }
+  .qtext::after{content:"▌";color:var(--red);animation:caret 1s steps(2,end) infinite;margin-left:2px;}
+  .qtext.done::after,.qtext.fade-out::after{content:"";}
+  @keyframes caret{50%{opacity:0;}}
+  .qtext.fade-out{opacity:0;}
+
+  /* buzzer */
+  .buzz-wrap{margin-top:auto;padding-top:20px;text-align:center;}
+  .btn-buzz{
+    font-family:'Dela Gothic One',sans-serif;font-size:clamp(20px,6vw,26px);font-weight:400;
+    color:#fff;background:radial-gradient(circle at 50% 35%,#ff3a5e,var(--red) 55%,var(--red-deep));
+    border:none;border-radius:50%;width:clamp(130px,38vw,150px);height:clamp(130px,38vw,150px);
+    cursor:pointer;box-shadow:0 8px 26px rgba(255,0,51,.5),inset 0 -6px 14px rgba(0,0,0,.3),inset 0 4px 10px rgba(255,255,255,.25);
+    transition:transform .1s ease;letter-spacing:.02em;line-height:1.25;animation:buzzpulse 1.6s ease-in-out infinite;
+  }
+  .btn-buzz:active{transform:scale(.92);}
+  @keyframes buzzpulse{0%,100%{box-shadow:0 8px 26px rgba(255,0,51,.45),inset 0 -6px 14px rgba(0,0,0,.3),inset 0 4px 10px rgba(255,255,255,.25);}50%{box-shadow:0 8px 38px rgba(255,0,51,.85),inset 0 -6px 14px rgba(0,0,0,.3),inset 0 4px 10px rgba(255,255,255,.25);}}
+  .buzz-hint{margin-top:12px;font-size:12px;color:var(--dim);letter-spacing:.05em;}
+
+  .choices{display:none;gap:10px;margin-top:20px;}
+  .choices.show{display:grid;animation:fade .3s ease;}
+  .choices.ox{grid-template-columns:1fr 1fr;}
+  .choice{
+    font-family:'Noto Sans JP',sans-serif;font-size:clamp(15px,4.2vw,18px);font-weight:600;
+    background:#211118;border:1.5px solid rgba(255,0,51,.26);color:var(--white);
+    border-radius:13px;padding:15px 16px;cursor:pointer;text-align:center;
+    transition:transform .12s ease,background .2s ease,border-color .2s ease;min-height:54px;
+    display:flex;align-items:center;justify-content:center;line-height:1.4;
+  }
+  .choice:active{transform:scale(.97);}
+  .choice:focus{outline:none;}
+  .choice:focus-visible{outline:none;}
+  @media (hover:hover) and (pointer:fine){
+    .choice:hover{border-color:var(--red);}
+  }
+  .choice.ox-mark{font-size:clamp(28px,9vw,38px);font-weight:800;}
+  .choice.correct{background:linear-gradient(135deg,#2f9a64,#23744c);border-color:var(--green);color:#fff;}
+  .choice.wrong{background:linear-gradient(135deg,var(--red-deep),#8e0f2a);border-color:var(--red);color:#fff;}
+  .choice.dim{opacity:.4;}
+  .choice[disabled]{cursor:default;}
+
+  /* result overlay (正誤オーバーレイ) */
+  .result-overlay{
+    position:fixed;inset:0;z-index:55;background:rgba(6,4,6,.82);
+    display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);
+  }
+  .result-overlay.show{display:flex;animation:fade .25s ease;}
+  .ro-card{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));border-radius:22px;
+    max-width:420px;width:100%;padding:28px 24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.7);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .ro-card.ok{border-color:var(--green);}
+  .ro-card.ng{border-color:var(--red);}
+  .ro-mark{font-size:64px;line-height:1;}
+  .ro-card.ok .ro-mark{color:var(--green);text-shadow:0 0 24px rgba(63,207,134,.5);}
+  .ro-card.ng .ro-mark{color:var(--red);text-shadow:0 0 24px rgba(255,0,51,.5);}
+  .ro-head{font-size:24px;font-weight:900;margin:8px 0 2px;}
+  .ro-card.ok .ro-head{color:var(--green);}
+  .ro-card.ng .ro-head{color:var(--red-soft);}
+  .ro-ans{margin:14px 0 0;font-size:14px;color:var(--dim);}
+  .ro-ans b{display:block;margin-top:4px;font-size:17px;color:var(--gold-soft);font-weight:700;line-height:1.5;}
+  .ro-explain{margin-top:14px;padding:13px 15px;background:rgba(255,206,58,.08);border-left:3px solid var(--gold);border-radius:9px;font-size:13px;line-height:1.8;color:#efe6d3;text-align:left;}
+  .ro-card .btn{margin-top:20px;width:100%;}
+
+  /* feedback toast */
+  .toast{
+    position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    z-index:60;background:rgba(12,8,12,.96);border:1px solid var(--gold);
+    border-radius:14px;padding:14px 22px;max-width:90%;text-align:center;
+    box-shadow:0 10px 32px rgba(0,0,0,.55);
+    opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast .big{font-size:18px;font-weight:900;}
+  .toast.ok .big{color:var(--green);}
+  .toast.ng .big{color:var(--red-soft);}
+  .toast .small{font-size:13px;color:#ece6e9;margin-top:4px;line-height:1.5;}
+
+  /* ===== Result ===== */
+  .result-card{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid var(--gold);border-radius:20px;padding:28px 22px;text-align:center;
+    box-shadow:0 10px 34px var(--shadow);
+  }
+  .result-card .trophy{font-size:48px;}
+  .result-card h2{margin:8px 0 2px;font-size:24px;font-weight:900;}
+  .result-card .genre-name{color:var(--gold);font-size:15px;}
+  .score-break{margin:20px 0;display:grid;gap:8px;font-size:14px;}
+  .score-break .row{display:flex;justify-content:space-between;padding:9px 14px;background:rgba(0,0,0,.26);border-radius:9px;}
+  .score-break .row .v{font-weight:700;color:var(--gold);}
+  .total-score{font-size:46px;font-weight:900;color:var(--gold);margin:6px 0;text-shadow:0 0 18px rgba(255,206,58,.4);}
+  .total-score small{font-size:18px;color:var(--dim);}
+  .rank-badge{display:inline-block;padding:7px 20px;border-radius:30px;font-weight:900;margin-top:6px;font-size:15px;}
+
+  .name-entry{margin:18px 0;}
+  .name-entry input{
+    font-family:'Noto Sans JP',sans-serif;font-size:16px;padding:11px 14px;border-radius:11px;
+    border:1.5px solid rgba(255,206,58,.4);background:#211118;color:var(--white);width:100%;text-align:center;
+  }
+  .name-entry input:focus{outline:none;border-color:var(--gold);}
+  .result-actions{display:grid;gap:10px;margin-top:18px;}
+
+  /* ===== Review ===== */
+  .review-card{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid rgba(255,0,51,.42);border-radius:18px;padding:22px 20px;box-shadow:0 8px 28px var(--shadow);
+  }
+  .review-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .review-head .ttl{color:var(--red-soft);font-weight:900;font-size:16px;}
+  .review-head .count{font-size:13px;color:var(--dim);}
+  .review-q{font-size:clamp(16px,4.4vw,20px);font-weight:700;line-height:1.6;margin-bottom:14px;}
+  .ans-line{padding:11px 14px;border-radius:11px;margin-bottom:8px;font-size:14px;line-height:1.6;}
+  .ans-line.yours{background:rgba(255,0,51,.15);border:1px solid rgba(255,0,51,.4);}
+  .ans-line.right{background:rgba(63,207,134,.13);border:1px solid rgba(63,207,134,.45);}
+  .ans-line .lab{font-size:11px;color:var(--dim);display:block;margin-bottom:2px;}
+  .ans-line.yours .val{color:var(--red-soft);font-weight:700;}
+  .ans-line.right .val{color:#7fe6ad;font-weight:700;}
+  .explain{margin-top:12px;padding:13px 15px;background:rgba(255,206,58,.08);border-left:3px solid var(--gold);border-radius:9px;font-size:13px;line-height:1.8;color:#efe6d3;}
+  .review-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;}
+  .review-nav .btn{flex:1;}
+  .perfect-msg{text-align:center;padding:30px 10px;color:var(--gold);font-size:18px;line-height:1.7;font-weight:700;}
+
+  /* ===== Ranking ===== */
+  .rank-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+  .rank-tabs .tab{
+    flex:1;min-width:90px;font-size:12px;font-weight:700;
+    padding:8px 6px;border-radius:9px;border:1px solid rgba(255,0,51,.3);background:#211118;
+    color:var(--dim);cursor:pointer;text-align:center;transition:all .2s ease;
+  }
+  .rank-tabs .tab.active{background:linear-gradient(135deg,var(--gold),#e0a91f);color:#2a1f04;border-color:var(--gold);}
+  .rank-list{list-style:none;margin:0;padding:0;}
+  .rank-list li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:11px;background:rgba(0,0,0,.24);margin-bottom:7px;}
+  .rank-list li .pos{font-weight:900;width:28px;text-align:center;color:var(--dim);font-size:15px;}
+  .rank-list li.top1 .pos{color:#ffd24a;}.rank-list li.top2 .pos{color:#d8d8d8;}.rank-list li.top3 .pos{color:#e08a4f;}
+  .rank-list li .nm{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rank-list li .dt{font-size:11px;color:var(--dim);}
+  .rank-list li .sc{font-weight:900;color:var(--gold);}
+  .rank-empty{text-align:center;color:var(--dim);padding:34px 10px;font-size:14px;line-height:1.7;}
+
+  .back-portal{position:fixed;top:12px;left:12px;z-index:40;}
+  .back-portal a{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:700;text-decoration:none;color:var(--dim);
+    background:rgba(11,10,12,.85);border:1px solid rgba(255,0,51,.35);border-radius:30px;padding:7px 14px;
+    transition:all .2s ease;backdrop-filter:blur(4px);
+  }
+  .back-portal a:hover{color:var(--red-soft);border-color:var(--red);}
+
+  .top-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+
+  @media(max-width:360px){
+    .hud .pill{padding:7px 11px;}
+  }
 </style>
 </head>
 <body>
-<div id="screen-top" class="screen active">
-  <div class="top-hero">
-    <div class="top-eyebrow">Tommy's Quiz Dojo</div>
-    <h1 class="top-title">アニメクイズ<span>（日本編）</span></h1>
-    <p class="top-sub">少年・少女・SF・日常・ジブリ・名作まで幅広く出題！</p>
-    <div class="top-rule">📋 制限時間：<strong>120秒</strong> ／ 各ジャンル<strong>10問</strong>ランダム出題<br>✅ 正解 → <strong>+10点</strong> ＋ 時間+5秒<br>❌ 不正解 → 減点なし ＋ 時間−5秒のペナルティ<br>🏆 残り時間がそのままボーナス点に加算！<br>⚡ 問題が流れたら「回答する！」を押して選択肢を表示<br>【4択】と【○×】がランダムにミックスされます</div>
-  </div>
-  <div class="genres-wrap">
-    <div class="genres-label">// ジャンルを選んでスタート</div>
-    <div class="genres-hint">👆 カードをクリックするとすぐに始められます</div>
-    <div class="genres-grid" id="genres-grid"></div>
-    <div class="ranking-btn-wrap"><button class="ranking-btn" onclick="showRanking()">🏆 スコアランキングを見る</button></div>
-  </div>
+<canvas id="bgCanvas"></canvas>
+
+<div class="back-portal">
+  <a href="https://pecpec37-gift.github.io/portal/">‹ ポータルサイトに戻る</a>
 </div>
-<div id="screen-intro" class="screen">
-  <div class="intro-box">
-    <span class="intro-icon" id="intro-icon"></span>
-    <div class="intro-name" id="intro-name"></div>
-    <div class="intro-desc" id="intro-desc"></div>
-    <div class="intro-rule">制限時間：<strong>120秒</strong> ／ 10問ランダム出題（4択＋○×ミックス）<br>✅ 正解 → <strong>+10点</strong> ＋ 時間+5秒<br>❌ 不正解 → 減点なし ＋ 時間−5秒<br>🏆 残り時間がそのままボーナス点に加算<br>⚡ 問題が流れたら「回答する！」で選択肢が出ます</div>
-    <div class="name-label">// Your Name（ランキングに表示）</div>
-    <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="プレーヤー名（任意）">
-    <button class="start-btn" onclick="startGame()">スタート ▶</button>
-    <button class="back-link" onclick="showScreen('screen-top')">← 戻る</button>
-  </div>
-</div>
-<div id="screen-quiz" class="screen">
-  <div class="quiz-header">
-    <div class="quiz-qnum" id="quiz-qnum">Q1 / 10</div>
-    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
-    <div class="quiz-score" id="quiz-score">0 pt</div>
-    <div class="quiz-timer-wrap"><div class="quiz-timer" id="quiz-timer">120</div><div class="quiz-timer-label">秒</div></div>
-  </div>
-  <div class="quiz-body">
-    <div class="quiz-type-badge" id="quiz-type-badge">4択</div>
-    <div class="quiz-q" id="quiz-q"><span class="cursor-blink"></span></div>
-    <div id="quiz-choices" style="display:none;"></div>
-    <button class="buzzer-btn" id="buzzer-btn" onclick="onBuzzer()">⚡ 回答する！</button>
-  </div>
-</div>
-<div id="screen-result" class="screen">
-  <div class="result-box">
-    <div class="result-genre" id="result-genre"></div>
-    <div class="result-score-wrap">
-      <span class="result-medal" id="result-medal">🏆</span>
-      <div class="result-score" id="result-score">0</div>
-      <div class="result-score-label">TOTAL SCORE</div>
-      <div class="result-stats">
-        <div class="result-stat"><div class="result-stat-val green" id="result-correct">0</div><div class="result-stat-label">正解数</div></div>
-        <div class="result-stat"><div class="result-stat-val" id="result-wrong">0</div><div class="result-stat-label">不正解数</div></div>
-        <div class="result-stat"><div class="result-stat-val gold" id="result-bonus">+0</div><div class="result-stat-label">時間ボーナス</div></div>
+
+<div class="wrap">
+
+  <!-- ============ TITLE ============ -->
+  <section id="screen-title" class="screen active">
+    <div class="crest" style="margin-top:40px;">
+      <div class="seal">早押しクイズ道場 シリーズ</div>
+      <h1><span class="yt">アニメクイズ</span><br><span class="dojo">日本編</span></h1>
+      <div class="subtitle">JAPANESE ANIME QUIZ<br>少年・少女・SF・日常・ジブリ・名作まで、<br>日本の名作アニメを早押しクイズで楽しもう。</div>
+      <div class="datenote">🎌 名作から人気作まで、日本アニメの知識を出題</div>
+    </div>
+
+    <div class="howto">
+      <h3>遊び方</h3>
+      <ul>
+        <li>ジャンル別に <b>ランダム10問</b> を出題（4択 ＋ ○× ミックス）</li>
+        <li>問題が流れたら <b>「回答する！」</b> → 4つの選択肢が出現！</li>
+        <li>制限時間は <b>60秒</b>。残った時間はそのまま <b>ボーナス点</b> に！</li>
+        <li>正解 → <b>+10点 ＆ 時間+5秒</b>（「✅ 正解！ +5秒」）</li>
+        <li>不正解 → <b>減点なし・時間−5秒</b>（正解を表示）</li>
+        <li>終了後は <b>間違えた問題を1問ずつ復習</b> できます</li>
+        <li>正解率 <b>90%以上で🌸花丸スタンプ</b>（ポータルのランキングに反映）</li>
+        <li>スコアは端末内ランキングに記録（ローカル保存・共有なし）</li>
+      </ul>
+      <div class="tap-hint"><span>▶ ジャンルをクリックで即スタート！</span></div>
+    </div>
+
+    <div class="section-label">ジャンルを選ぶ</div>
+    <div class="genres" id="genreGrid"></div>
+
+    <div class="top-actions">
+      <button class="btn btn-ghost" onclick="showRanking()">🏆 ランキング</button>
+      <button class="btn btn-ghost" onclick="randomGenre()">🎲 おまかせ出題</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="hud">
+      <div class="pill score-pill"><span class="lab">得点</span><span id="hudScore">0</span></div>
+      <div class="pill time-pill" id="timePill"><span class="lab">残り</span><span id="hudTime">60</span>秒</div>
+    </div>
+    <div class="timebar"><div class="fill" id="timeFill"></div></div>
+    <div class="progress" id="progress">第 1 問 / 10</div>
+
+    <div class="qcard">
+      <span class="qtag" id="qTag">ジャンル</span>
+      <span class="qtype" id="qType">4択</span>
+      <div class="qtext" id="qText"></div>
+      <div class="buzz-wrap" id="buzzWrap">
+        <button class="btn-buzz" onclick="buzz()">回答<br>する！</button>
+        <div class="buzz-hint">押すと選択肢が出ます</div>
+      </div>
+      <div class="choices" id="choices"></div>
+    </div>
+
+    <div class="footer-row">
+      <button class="btn btn-ghost" onclick="quitGame()">やめる</button>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="screen-result" class="screen">
+    <div class="result-card">
+      <div class="trophy">🏆</div>
+      <h2>結果発表</h2>
+      <div class="genre-name" id="resGenre">ジャンル</div>
+
+      <div class="total-score"><span id="resTotal">0</span><small> 点</small></div>
+      <div class="rank-badge" id="resBadge">—</div>
+
+      <div class="hanamaru" id="hanamaru" style="display:none;margin:16px auto 4px;padding:13px 16px;border-radius:16px;max-width:340px;background:linear-gradient(135deg,rgba(255,206,58,.2),rgba(255,0,51,.16));border:1.5px solid rgba(255,206,58,.6);">
+        <div style="font-size:30px;line-height:1;">🌸</div>
+        <div style="font-weight:900;color:var(--gold-soft);margin-top:4px;letter-spacing:.03em;">花丸スタンプ獲得！</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:3px;">正解率90%以上達成　ポータルのランキングに反映されます</div>
+      </div>
+
+      <div class="score-break">
+        <div class="row"><span>正解数</span><span class="v"><span id="resCorrect">0</span> / 10 問</span></div>
+        <div class="row"><span>基礎点（正解×10）</span><span class="v"><span id="resBase">0</span> 点</span></div>
+        <div class="row"><span>残り時間ボーナス</span><span class="v">+ <span id="resBonus">0</span> 点</span></div>
+      </div>
+
+      <div class="name-entry" id="nameEntry">
+        <input type="text" id="playerName" placeholder="花丸ランキング用の名前（任意）" maxlength="12">
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-gold btn-block" id="saveBtn" onclick="saveScore()">📥 ランキングに登録</button>
+        <button class="btn btn-crimson btn-block" id="reviewBtn" onclick="showReview()">📖 間違えた問題を復習</button>
+        <button class="btn btn-ghost btn-block" onclick="retrySame()">🔁 同じジャンルに再挑戦</button>
+        <button class="btn btn-ghost btn-block" onclick="goTitle()">🏠 トップへ戻る</button>
       </div>
     </div>
-    <div class="result-actions">
-      <button class="result-btn result-btn-primary" onclick="retryGame()">もう一度挑戦</button>
-      <button class="result-btn result-btn-secondary" onclick="showScreen('screen-top')">← トップへ</button>
+  </section>
+
+  <!-- ============ REVIEW ============ -->
+  <section id="screen-review" class="screen">
+    <div class="review-card" id="reviewCard"></div>
+    <div class="footer-row">
+      <button class="btn btn-ghost" onclick="backToResult()">‹ 結果に戻る</button>
     </div>
-  </div>
-  <div class="wrong-section" id="wrong-section"></div>
-  <a class="portal-back" href="https://pecpec37-gift.github.io/portal/">← とみやんのゲームランド</a>
-</div>
-<div id="screen-ranking" class="screen">
-  <div class="ranking-wrap">
-    <div class="ranking-top"><div class="ranking-title">🏆 スコアランキング</div><button class="ranking-back" onclick="showScreen('screen-top')">← トップへ</button></div>
-    <div class="ranking-tabs" id="ranking-tabs"></div>
-    <div class="ranking-list" id="ranking-list"></div>
-    <div style="text-align:center;margin-top:16px;"><button class="ranking-del" onclick="deleteRanking()">🗑️ このジャンルの記録を削除</button></div>
-  </div>
-</div>
-<div class="result-overlay" id="result-overlay">
-  <div class="result-box-ov" id="result-box-ov">
-    <div class="result-emoji" id="result-emoji">✅</div>
-    <div class="result-label-ov" id="result-label-ov">正解！</div>
-    <div class="result-ans-show">
-      <div class="result-ans-q" id="result-ov-q"></div>
-      <div class="result-ans-a" id="result-ov-a"></div>
+  </section>
+
+  <!-- ============ RANKING ============ -->
+  <section id="screen-ranking" class="screen">
+    <div class="crest" style="margin-top:30px;">
+      <h1 style="font-size:clamp(26px,8vw,42px);">🏆 ランキング</h1>
+      <div class="subtitle">この端末に保存された記録（ジャンル別 / 上位10位）</div>
     </div>
-    <div class="result-feedback" id="result-ov-fb"></div>
-    <button class="start-btn" id="ov-next-btn" onclick="nextQuestion()">次の問題へ →</button>
+    <div class="rank-tabs" id="rankTabs"></div>
+    <ul class="rank-list" id="rankList"></ul>
+    <div class="footer-row" style="gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="goTitle()">🏠 トップへ戻る</button>
+      <button class="btn btn-ghost" onclick="clearRanking()">🗑 この記録を消去</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- confirmation modal（最後の確認） -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="ji" id="modalJi">🔥</div>
+    <h2 id="modalName">ジャンル</h2>
+    <p id="modalDesc"></p>
+    <div class="rules">
+      ⏱ 60秒　/　全10問　/　正解 +10点・+5秒<br>残り時間はそのままボーナス点に！
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">やめる</button>
+      <button class="btn btn-crimson" onclick="confirmStart()">スタート！</button>
+    </div>
   </div>
 </div>
 
-<div id="toast"></div>
-<a class="portal-fixed-btn" href="https://pecpec37-gift.github.io/portal/">← とみやんのゲームランド</a>
+<!-- 正誤オーバーレイ -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="ro-card" id="roCard">
+    <div class="ro-mark" id="roMark">◯</div>
+    <div class="ro-head" id="roHead">正解！</div>
+    <div class="ro-ans" id="roAns"></div>
+    <div class="ro-explain" id="roExplain"></div>
+    <button class="btn btn-crimson" onclick="nextQuestion()">次の問題へ ›</button>
+  </div>
+</div>
+
+<!-- feedback toast -->
+<div class="toast" id="toast"><div class="big" id="toastBig"></div><div class="small" id="toastSmall"></div></div>
+
+<!-- ポータル共通：花丸スタンプ送信 -->
+<script src="https://pecpec37-gift.github.io/portal/stamp.js"></script>
+
 <script>
-const GENRES=[
-  {id:'shonen',  icon:'🔥', name:'少年アニメ',         color:'#dc2626', desc:'ワンピース・鬼滅・NARUTO・ドラゴンボールなど'},
-  {id:'shoujo',  icon:'💕', name:'少女・恋愛アニメ',   color:'#ec4899', desc:'セーラームーン・まどか・カードキャプターなど'},
-  {id:'scifi',   icon:'🤖', name:'SF・ロボットアニメ', color:'#2563eb', desc:'エヴァ・ガンダム・コードギアスなど'},
-  {id:'nichijou',icon:'🏫', name:'日常・学園アニメ',   color:'#16a34a', desc:'けいおん・ハルヒ・ハイキューなど'},
-  {id:'ghibli',  icon:'🌿', name:'スタジオジブリ',     color:'#0891b2', desc:'トトロ・千と千尋・もののけ姫など'},
-  {id:'classic', icon:'🌟', name:'名作・クラシック',   color:'#d97706', desc:'ドラえもん・サザエさん・コナンなど'},
-];
-const DB={
-shonen:[
-  {type:'4',q:'「ドラゴンボール」の主人公・孫悟空の必殺技はどれか？',c:['螺旋丸','波紋疾走','鬼滅の刃','かめはめ波'],a:3},
-  {type:'ox',q:'「ワンピース」の主人公ルフィはゴムゴムの実を食べて体がゴムになった。',a:true},
-  {type:'4',q:'「鬼滅の刃」の主人公・竈門炭治郎が使う呼吸法はどれか？',c:['風の呼吸','雷の呼吸','水の呼吸','炎の呼吸'],a:2},
-  {type:'ox',q:'「NARUTO」の主人公・うずまきナルトは木ノ葉隠れの里の忍者だ。',a:true},
-  {type:'4',q:'「ハンター×ハンター」でゴンの父親は誰か？',c:['ジン=フリークス','コルトピ','シルバ=ゾルディック','ネテロ会長'],a:0},
-  {type:'ox',q:'「僕のヒーローアカデミア」の世界では人口の約80%が何らかの個性を持つ。',a:true},
-  {type:'4',q:'「呪術廻戦」の主人公・虎杖悠仁が持つ特殊な体の特徴はどれか？',c:['再生能力','呪力の無限貯蔵','呪王・宿儺の器として機能する肉体','鋼鉄の皮膚'],a:2},
-  {type:'ox',q:'「進撃の巨人」の舞台となる城壁都市の最も外側の壁はウォール・マリアだ。',a:true},
-  {type:'4',q:'「BLEACH」の主人公・黒崎一護の斬魄刀の名前はどれか？',c:['崩玉','破面','斬月','天鎖斬月'],a:2},
-  {type:'ox',q:'「テニスの王子様」の主人公・越前リョーマはアメリカ帰りの天才テニス少年だ。',a:true},
-  {type:'4',q:'「スラムダンク」の舞台となった高校の名前はどれか？',c:['山王工業','陵南高校','湘北高校','翔陽高校'],a:2},
-  {type:'ox',q:'「ドラゴンボールZ」でフリーザを倒したのはスーパーサイヤ人に変身した孫悟空だ。',a:true},
-  {type:'4',q:'「ワンピース」で「七武海」とは何か？',c:['海軍の最高幹部7人','4つの海の最強海賊団','空島に住む7神','世界政府公認の海賊7人の総称'],a:3},
-  {type:'ox',q:'「鬼滅の刃」では鬼は太陽の光を浴びると死んでしまう。',a:true},
-  {type:'4',q:'「NARUTO」でナルトの師匠・自来也の忍術は何に関係するか？',c:['タコ','ナメクジ','ヘビ','カエル'],a:3},
-  {type:'ox',q:'「僕のヒーローアカデミア」の主人公・緑谷出久の個性の名前はワン・フォー・オールだ。',a:true},
-  {type:'4',q:'「進撃の巨人」の主人公・エレン・イェーガーは何の力を持つか？',c:['獣の巨人の力','戦槌の力','巨人に変身する能力','超硬化能力'],a:2},
-  {type:'ox',q:'「ドラゴンボール」のベジータはサイヤ人の王子だ。',a:true},
-  {type:'4',q:'「ワンピース」でロビンが食べた悪魔の実はどれか？',c:['ハナハナの実','ドアドアの実','ゾオゾオの実','トゲトゲの実'],a:0},
-  {type:'ox',q:'「僕のヒーローアカデミア」のオールマイトの本名は八木俊典だ。',a:true},
-  {type:'4',q:'「NARUTO」でうちはイタチがサスケに施した幻術の名前はどれか？',c:['月読','神威','天照','須佐能乎'],a:0},
-  {type:'ox',q:'「進撃の巨人」のリヴァイ兵長は人類最強の兵士と呼ばれる。',a:true},
-  {type:'4',q:'「スラムダンク」で主人公・桜木花道のポジションはどれか？',c:['ポイントガード','パワーフォワード','センター','シューティングガード'],a:1},
-  {type:'ox',q:'「呪術廻戦」で五条悟の目は六眼と呼ばれる特別な目だ。',a:true},
-  {type:'4',q:'「鬼滅の刃」の炭治郎の妹・禰豆子が人間を守り続けた最大の理由はどれか？',c:['無惨の命令に従わなかったから','特別な一族の出身だから','家族への強い愛情と絆','鬼の血が薄かったから'],a:2},
-  {type:'ox',q:'「ドラゴンボール」でドラゴンボールを7つ集めると神龍が現れて願いを叶えてくれる。',a:true},
-  {type:'4',q:'「ワンピース」の「四皇」はどんな存在か？',c:['海軍本部の最高幹部4人','世界最強クラスの海賊4人を指す称号','4つの海の王者','世界政府の4人の元首'],a:1},
-  {type:'ox',q:'「Hunter×Hunter」でゴン=フリークスの念能力の系統は強化系だ。',a:true},
-  {type:'4',q:'「BLEACH」で黒崎一護が最初に戦った敵の種族は何か？',c:['死神','滅却師','虚（ホロウ）','完現術者'],a:2},
-  {type:'ox',q:'「テニスの王子様」に登場するSEIGAKUとは青春学園中等部テニス部の略称だ。',a:true},
-],
-shoujo:[
-  {type:'4',q:'「セーラームーン」の主人公・月野うさぎが変身するセーラー戦士の名前はどれか？',c:['セーラーマーズ','セーラーヴィーナス','セーラーサターン','セーラームーン'],a:3},
-  {type:'ox',q:'「CardCaptor Sakura」の主人公・木之本桜はクロウカードを集めるためにカードキャプターになった。',a:true},
-  {type:'4',q:'「フルーツバスケット」で草摩家の人々に隠された秘密は何か？',c:['全員が神様の子孫','十二支の動物に変身してしまう','呪いで感情が消えた','吸血鬼の一族'],a:1},
-  {type:'ox',q:'「魔法少女まどか☆マギカ」の脚本は虚淵玄が担当した。',a:true},
-  {type:'4',q:'「魔法少女まどか☆マギカ」で魔法少女が望みを叶えてもらう代わりに引き受けることは何か？',c:['不老不死','記憶を消される','感情を失う','魔女と戦い続ける運命'],a:3},
-  {type:'ox',q:'「ふしぎ遊戯」の主人公・雛子は本の世界に入り込んで四神の巫女になる。',a:true},
-  {type:'4',q:'「彼氏彼女の事情」の主人公・宮沢雪野の学校での姿と家での姿の違いはどれか？',c:['見た目は地味だが実は天才','優しい性格と冷酷な性格','人前では無口だが実は話し好き','学校では優等生だが家では素の自分をさらけ出す'],a:3},
-  {type:'ox',q:'「美少女戦士セーラームーン」のセーラームーンの武器にティアラがある。',a:true},
-  {type:'4',q:'「フルーツバスケット」の草摩由希が変身する動物はどれか？',c:['ウサギ','ウマ','ネコ','ネズミ'],a:3},
-  {type:'ox',q:'「CardCaptor Sakura」でさくらを助けるケルベロス（ケロちゃん）の本来の姿は巨大なライオンだ。',a:true},
-  {type:'4',q:'「ヴァイオレット・エヴァーガーデン」の主人公が行う「自動手記人形」の仕事は何か？',c:['手紙の代筆','料理の代行','歌のパフォーマンス','戦場での通信'],a:0},
-  {type:'ox',q:'「とらドラ！」の主人公コンビは高須竜児と逢坂大河だ。',a:true},
-  {type:'4',q:'「魔法少女まどか☆マギカ」でほむら・あかみの能力はどれか？',c:['時間を操る力','予知能力','炎を操る力','念力'],a:0},
-  {type:'ox',q:'「CLANNAD」はKeyが制作したゲームが原作の泣けるアニメだ。',a:true},
-  {type:'4',q:'「化物語」シリーズの主人公・阿良々木暦が最初に助けた女の子は誰か？',c:['戦場ヶ原ひたぎ','羽川翼','神原駿河','八九寺真宵'],a:0},
-  {type:'ox',q:'「Angel Beats!」の舞台は死後の世界にある学校だ。',a:true},
-  {type:'4',q:'「Re：ゼロから始める異世界生活」の主人公・ナツキ・スバルが持つ能力はどれか？',c:['無限の魔法力','予知夢','時間停止','死んだ時点に巻き戻る能力'],a:3},
-  {type:'ox',q:'「俺ガイル（やはり俺の青春ラブコメはまちがっている）」の主人公は比企谷八幡だ。',a:true},
-  {type:'4',q:'「あの日見た花の名前を僕達はまだ知らない」の通称はどれか？',c:['僕花','あの花','花名','あの日'],a:1},
-  {type:'ox',q:'「氷菓」の主人公・折木奉太郎のモットーはやらなくていいことはやらない「省エネ」だ。',a:true},
-  {type:'4',q:'「ご注文はうさぎですか？」の舞台はどこか？',c:['海辺のリゾート地','東京の学校','田舎の農村','ヨーロッパ風の街にあるカフェ'],a:3},
-  {type:'ox',q:'「クラスルームの暗殺者（暗殺教室）」で殺せんせーは担任教師として生徒に接する。',a:true},
-  {type:'4',q:'「なかよし」を発行している出版社はどこか？',c:['秋田書店','小学館','講談社','集英社'],a:2},
-  {type:'ox',q:'「マクロスΔ」に登場するアイドルグループの名前はウォーキューレだ。',a:true},
-  {type:'4',q:'「クリィミーマミ」の主人公が持つ変身能力で変身した姿は何をしている人か？',c:['歌手（アイドル）','女優','声優','モデル'],a:0},
-],
-scifi:[
-  {type:'4',q:'「新世紀エヴァンゲリオン」の主人公・碇シンジが乗るエヴァンゲリオンは何号機か？',c:['弐号機','初号機','参号機','零号機'],a:1},
-  {type:'ox',q:'「機動戦士ガンダム」の初代主人公はアムロ・レイだ。',a:true},
-  {type:'4',q:'「コードギアス」でルルーシュが持つ能力「ギアス」はどんな能力か？',c:['未来予知','時間を止める力','相手に絶対に従わせる命令を下せる力','テレパシー'],a:2},
-  {type:'ox',q:'「マクロス」シリーズでは歌が戦闘に重要な役割を果たす。',a:true},
-  {type:'4',q:'「天元突破グレンラガン」の主人公コンビはどれか？',c:['ルルーシュとスザク','シンジとレイ','アムロとシャア','シモンとカミナ'],a:3},
-  {type:'ox',q:'「攻殻機動隊」の主人公・草薙素子は全身義体のサイボーグだ。',a:true},
-  {type:'4',q:'「新世紀エヴァンゲリオン」でシンジとゲンドウの関係は何か？',c:['兄と弟','上司と部下','父と息子','師匠と弟子'],a:2},
-  {type:'ox',q:'「カウボーイビバップ」の主人公スパイク・スピーゲルは賞金稼ぎだ。',a:true},
-  {type:'4',q:'「コードギアス」で仮面の騎士「ゼロ」の正体は誰か？',c:['CC','シャーリー','スザク','ルルーシュ・ランペルージ'],a:3},
-  {type:'ox',q:'「コードギアス」でブリタニア帝国に支配された日本はエリア11と呼ばれる。',a:true},
-  {type:'4',q:'「新世紀エヴァンゲリオン」に登場する敵の総称は何か？',c:['悪魔','異形','使徒','天使'],a:2},
-  {type:'ox',q:'「攻殻機動隊」の世界観はサイバーパンクをベースにしている。',a:true},
-  {type:'4',q:'「天元突破グレンラガン」で「ドリル」が象徴するものはどれか？',c:['魂・熱血・可能性','愛情','未来への道','科学技術'],a:0},
-  {type:'ox',q:'「マクロスF」のシェリル・ノームとランカ・リーは歌手として登場する。',a:true},
-  {type:'4',q:'「フルメタル・パニック！」の主人公・相良宗介の本業は何か？',c:['探偵','学生','軍人（対テロ組織の兵士）','傭兵'],a:2},
-  {type:'ox',q:'「新世紀エヴァンゲリオン」の使徒の名前は旧約聖書の天使名に由来するものが多い。',a:true},
-  {type:'4',q:'「機動戦士ガンダム00」の主人公・刹那が搭乗するガンダムはどれか？',c:['キュリオス','ヴァーチェ','ダブルオー','エクシア'],a:3},
-  {type:'ox',q:'「銀河英雄伝説」は宇宙を舞台にした壮大なSF作品だ。',a:true},
-  {type:'4',q:'「SSSS.GRIDMAN」の主人公・響裕太を助けるグリッドマンが宿ったのはどこか？',c:['スマートフォン','テレビのアンテナ','古いパソコンのモニター','ゲーム機'],a:2},
-  {type:'ox',q:'「スクライド」の主人公・カズマは右腕を変化させるアルターを使う。',a:true},
-  {type:'4',q:'「伝説巨神イデオン」の監督は誰か？',c:['細田守','宮崎駿','富野由悠季','庵野秀明'],a:2},
-  {type:'ox',q:'「機動戦士ガンダム」ではニュータイプという特殊な感知能力を持つ人間が登場する。',a:true},
-  {type:'4',q:'「カウボーイビバップ」の舞台となる主な場所はどこか？',c:['地球のみ','太陽系全体（火星など）','月面都市','宇宙ステーション'],a:1},
-  {type:'ox',q:'「コードギアス」の主人公ルルーシュは頭脳戦を得意とするキャラクターだ。',a:true},
-  {type:'4',q:'「新世紀エヴァンゲリオン」でゲンドウが追い求めた「人類補完計画」とは何か？',c:['エヴァを完成させること','地球を守ること','使徒を全滅させること','人類を一つの存在に融合させること'],a:3},
-],
-nichijou:[
-  {type:'4',q:'「けいおん！」の主人公・平沢唯が軽音部で担当する楽器はどれか？',c:['ドラム','ギター','キーボード','ベース'],a:1},
-  {type:'ox',q:'「涼宮ハルヒの憂鬱」の主人公・涼宮ハルヒは自分が特別な存在であることを自覚している。',a:false},
-  {type:'4',q:'「涼宮ハルヒの憂鬱」でハルヒが作った部活の名前はどれか？',c:['SOS団','時間旅行部','超能力研究会','宇宙人倶楽部'],a:0},
-  {type:'ox',q:'「らき☆すた」の主人公・泉こなたはアニメとゲームが大好きなオタクキャラだ。',a:true},
-  {type:'4',q:'「ハイキュー!!」の主人公・日向翔陽が目標にする称号はどれか？',c:['コート上の支配者','最強スパイカー','空を飛ぶ天才','小さな巨人'],a:3},
-  {type:'ox',q:'「ハイキュー!!」は高校バレーボールを題材にしたスポーツアニメだ。',a:true},
-  {type:'4',q:'「俺ガイル（やはり俺の青春ラブコメはまちがっている）」の八幡の所属する部活はどれか？',c:['料理部','文芸部','軽音部','奉仕部'],a:3},
-  {type:'ox',q:'「氷菓」は米澤穂信の小説が原作で京都アニメーションが制作した。',a:true},
-  {type:'4',q:'「ゆるキャン△」のキャラクター・志摩リンが好きなアウトドア活動は何か？',c:['釣り','ソロキャンプ','サイクリング','登山'],a:1},
-  {type:'ox',q:'「けいおん！」の放課後ティータイムが文化祭で演奏した曲に「ふわふわ時間」がある。',a:true},
-  {type:'4',q:'「暗殺教室」の殺せんせーが教える生徒たちの目標は何か？',c:['全国学力テストで1位になる','卒業式に感動させる','殺せんせーを暗殺する','部活で全国優勝する'],a:2},
-  {type:'ox',q:'「ちびまる子ちゃん」の作者はさくらももこだ。',a:true},
-  {type:'4',q:'「らき☆すた」に登場するキャラクター・柊かがみの性格として最も近いのはどれか？',c:['天然でおとなしい','ツンデレで成績優秀','無口で謎めいた存在','明るくてスポーツ万能'],a:1},
-  {type:'ox',q:'「よりもい（宇宙よりも遠い場所）」の主人公たちが目指した場所は南極だ。',a:true},
-  {type:'4',q:'「ガールズ&パンツァー」の主人公・西住みほが転校した先の高校はどこか？',c:['大洗女子学園','サンダース大学附属高校','黒森峰女学園','プラウダ高校'],a:0},
-  {type:'ox',q:'「だがしかし」は駄菓子をテーマにしたアニメだ。',a:true},
-  {type:'4',q:'「NEW GAME!」の主人公・涼風青葉の夢はどれか？',c:['声優になる','プロゲーマーになる','ゲームキャラクターのデザイナーになる','マンガ家になる'],a:2},
-  {type:'ox',q:'「君の名は。」は新海誠監督の劇場アニメ作品だ。',a:true},
-  {type:'4',q:'「日常」でハカセ（東雲なの）が背中につけているゼンマイについて正しいのはどれか？',c:['作中で明確な説明はなく謎のまま','飾りにすぎない','動力源として機能する','感情を表現するアンテナ'],a:0},
-  {type:'ox',q:'「けいおん！」の舞台となった高校は滋賀県がモデルと言われている。',a:true},
-  {type:'4',q:'「スーパーダンガンロンパ2」の登場人物にもなるモノクマを動かしている首謀者は誰か？',c:['江ノ島盾子','霧切響子','日向創','苗木誠'],a:0},
-  {type:'ox',q:'「ガーリッシュナンバー」の主人公・烏丸千歳の職業は声優だ。',a:true},
-  {type:'4',q:'「クラスルームの暗殺者」の舞台となるクラスは何組か？',c:['3年C組','2年B組','3年E組','1年A組'],a:2},
-  {type:'ox',q:'「ゆるキャン△」の舞台は主に山梨県・静岡県周辺だ。',a:true},
-  {type:'4',q:'「らき☆すた」の柊かがみの双子の妹の名前はどれか？',c:['柊こよみ','柊みらい','柊ゆたか','柊つかさ'],a:3},
-],
-ghibli:[
-  {type:'4',q:'「となりのトトロ」でサツキとメイの父親の職業はどれか？',c:['医師','大学教授（考古学）','農家','小学校の先生'],a:1},
-  {type:'ox',q:'「千と千尋の神隠し」で千尋の両親は豚に変えられてしまう。',a:true},
-  {type:'4',q:'「風の谷のナウシカ」でナウシカが乗り回す小型飛行器の名前はどれか？',c:['ペジテ号','コルベット','メーヴェ','ガンシップ'],a:2},
-  {type:'ox',q:'「魔女の宅急便」の主人公・キキは黒猫のジジと一緒に旅をする。',a:true},
-  {type:'4',q:'「もののけ姫」の主人公・アシタカが呪いをかけられたのは何の動物か？',c:['熊','イノシシ（ナゴの守）','シシ神','オオカミ'],a:1},
-  {type:'ox',q:'「天空の城ラピュタ」でラピュタを復活させようとする悪役の名前はムスカだ。',a:true},
-  {type:'4',q:'「千と千尋の神隠し」で千尋が働く湯屋の名前はどれか？',c:['火屋','油屋','風屋','水屋'],a:1},
-  {type:'ox',q:'「ハウルの動く城」の原作はイギリス人作家ダイアナ・ウィン・ジョーンズの小説だ。',a:true},
-  {type:'4',q:'「もののけ姫」でモロの君が率いるのはどんな動物の群れか？',c:['熊','イノシシ','オオカミ','シカ'],a:2},
-  {type:'ox',q:'「風立ちぬ」の主人公・堀越二郎は実在の航空技術者をモデルにしている。',a:true},
-  {type:'4',q:'「耳をすませば」の主人公・月島雫が図書館で出会う少年は誰か？',c:['バロン','杉村','西老人','天沢聖司'],a:3},
-  {type:'ox',q:'「かぐや姫の物語」はスタジオジブリ制作で高畑勲が監督した。',a:true},
-  {type:'4',q:'「魔女の宅急便」でキキが住み込む街のモデルになったとされる国はどこか？',c:['スウェーデン（ストックホルム等）','イタリア','スペイン','フランス'],a:0},
-  {type:'ox',q:'「崖の上のポニョ」の舞台は海辺の町だ。',a:true},
-  {type:'4',q:'「おもひでぽろぽろ」の主人公・タエ子が旅した場所はどこか？',c:['山形県（農村）','北海道','沖縄','京都'],a:0},
-  {type:'ox',q:'「千と千尋の神隠し」はアカデミー賞長編アニメーション賞を受賞した。',a:true},
-  {type:'4',q:'「天空の城ラピュタ」でパズーとシータが唱えたラピュタを破壊する言葉はどれか？',c:['バルス','ムスカ','ラピュタ','レプカ'],a:0},
-  {type:'ox',q:'「風の谷のナウシカ」の腐海は汚染された土地を浄化するために存在していた。',a:true},
-  {type:'4',q:'「ハウルの動く城」でソフィーに魔法をかけて老婆にした魔女の名前はどれか？',c:['サリマン','ヒン','カルシファー','荒地の魔女'],a:3},
-  {type:'ox',q:'宮崎駿はスタジオジブリの共同創業者の一人だ。',a:true},
-  {type:'4',q:'「となりのトトロ」でトトロが住む場所はどこか？',c:['クスノキの中','竹林','洞窟の中','川の底'],a:0},
-  {type:'ox',q:'「もののけ姫」のサン（もののけ姫）は人間でありながら山犬に育てられた。',a:true},
-  {type:'4',q:'「紅の豚」の主人公・ポルコ・ロッソが操るのはどんな乗り物か？',c:['潜水艦','飛行艇（水上飛行機）','船','戦闘機'],a:1},
-  {type:'ox',q:'「アーヤと魔女」はスタジオジブリ初のフル3DCGアニメ作品だ。',a:true},
-  {type:'4',q:'「思い出のマーニー」の主人公・杏奈が出会う不思議な少女の名前はどれか？',c:['サツキ','マーニー','ナウシカ','ハク'],a:1},
-],
-classic:[
-  {type:'4',q:'「アルプスの少女ハイジ」でハイジが暮らすアルプスのおじいさんの呼び名はどれか？',c:['ペーター','おんじ（アルムおんじ）','ロッテンマイヤー先生','クララのパパ'],a:1},
-  {type:'ox',q:'「ドラえもん」の主人公・野比のび太は勉強と運動が苦手だ。',a:true},
-  {type:'4',q:'「サザエさん」に登場するイソノ家の父親の名前はどれか？',c:['カツオ','マスオ','波平（波野平吉）','フグ田'],a:2},
-  {type:'ox',q:'「銀河鉄道999」に登場するメーテルは謎の美しい女性として鉄郎の旅に同行する。',a:true},
-  {type:'4',q:'「名探偵コナン」の主人公・江戸川コナンの本当の名前はどれか？',c:['黒羽快斗','鈴木次郎吉','毛利蘭','工藤新一'],a:3},
-  {type:'ox',q:'「ちびまる子ちゃん」の舞台は静岡県清水市（現・静岡市清水区）だ。',a:true},
-  {type:'4',q:'「宇宙戦艦ヤマト」で地球を救うために向かった星はどれか？',c:['ラゼル','イスカンダル','ガミラス','メルダー星'],a:1},
-  {type:'ox',q:'「鉄腕アトム」の主人公・アトムは天馬博士が亡くなった息子をモデルに作ったロボットだ。',a:true},
-  {type:'4',q:'「キャプテン翼」の主人公・大空翼が目指す夢はどれか？',c:['国内リーグで得点王になる','オリンピックに出る','ワールドカップで世界一になる','プロ野球選手になる'],a:2},
-  {type:'ox',q:'「名探偵コナン」の黒の組織のボスは「あの方」と呼ばれ長らく正体が謎だった。',a:true},
-  {type:'4',q:'「ルパン三世」のルパン三世の祖父は誰か？',c:['石川五ェ門の師匠','怪盗アルセーヌ・ルパン','銭形警部の祖父','峰不二子の父'],a:1},
-  {type:'ox',q:'「タッチ」の主人公・上杉達也の弟・和也は野球の才能があったが若くして亡くなる。',a:true},
-  {type:'4',q:'「魔法使いサリー」は日本初の何アニメとされているか？',c:['ロボットアニメ','魔法少女アニメ','学園アニメ','スポーツアニメ'],a:1},
-  {type:'ox',q:'「ゲゲゲの鬼太郎」の主人公・鬼太郎の父親は目玉おやじだ。',a:true},
-  {type:'4',q:'「機動戦士ガンダム」が最初に放送されたのはいつか？',c:['1985年','1982年','1979年','1975年'],a:2},
-  {type:'ox',q:'「美少女戦士セーラームーン」のアニメは1992年にスタートした。',a:true},
-  {type:'4',q:'「Dr.スランプ アラレちゃん」のアラレちゃんが住む村の名前はどれか？',c:['ひまわり村','ペンギン村','タコ村','ロボット村'],a:1},
-  {type:'ox',q:'「ドラえもん」の四次元ポケットはおなかにある。',a:true},
-  {type:'4',q:'「北斗の拳」の主人公・ケンシロウが使う格闘技の名前はどれか？',c:['南斗水鳥拳','天才拳','北斗神拳','修羅拳'],a:2},
-  {type:'ox',q:'「あしたのジョー」の主人公・矢吹丈はボクサーだ。',a:true},
-  {type:'4',q:'「ルパン三世 カリオストロの城」は宮崎駿が監督した映画だ。',c:['半分正しい','間違い','正しい','不明'],a:2},
-  {type:'ox',q:'「タッチ」の作者はあだち充だ。',a:true},
-  {type:'4',q:'「花より男子」の主人公・牧野つくしが通う学校の名前はどれか？',c:['桜蘭高校','青音大学付属高校','英徳学園','聖夜高校'],a:2},
-  {type:'ox',q:'「キャプテン翼」で大空翼の親友・若島津健はゴールキーパーだ。',a:true},
-  {type:'4',q:'「宇宙戦艦ヤマト」でヤマトの艦長・沖田十三が抱える病は何か？',c:['戦傷による後遺症','心臓病','宇宙病','放射線病（難病）'],a:3},
-],
+/* =========================================================
+   アニメクイズ（日本編）／早押しクイズ道場 シリーズ
+   - 4択 + ○× ミックス / 10問ランダム出題
+   - タイプライター → 回答する！ → 選択肢 → 色付け → 問題文フェードイン
+     → 0.6秒後に正誤オーバーレイ → 次の問題へでトースト消去
+   - 60秒 + 残り時間ボーナス / 正解+10点+5秒 / 不正解-5秒
+   - 4択は表示時にシャッフル（正解位置の偏り防止）
+   - ○× は ◯/✕ の並びを固定（プール内で正誤を均等化）
+   - ジャンル別ローカルランキング(localStorage) / 間違い復習
+   - canvas背景の動的リサイズ
+   ========================================================= */
+
+const TOTAL_Q   = 10;
+const START_TIME= 60;
+const MAX_TIME  = 90;      /* +5秒で多少伸びる余地（60秒制限）*/
+const TYPING_SPEED = 120;  /* ms / 文字（早押しタイプ速度）*/
+const STORAGE_KEY = 'anime_jp_quiz_dojo_ranking_v1';
+const STAMP_GAME_ID = 'anime-jp-quiz-dojo';  /* ポータル花丸スタンプ用ID（GitHubリポジトリ名と一致）*/
+
+/* ---------- 問題データ ----------
+   4択 : {q, a:正解, w:[誤答3つ], e:解説}
+   ○× : {q, ox:true/false, e:解説}
+*/
+const QUIZ = {
+  shonen:{
+    name:"少年アニメ", ji:"🔥",
+    desc:"ワンピース・鬼滅・NARUTO・ドラゴンボールなど",
+    pool:[
+      {q:"「ドラゴンボール」の主人公・孫悟空の必殺技はどれか？", a:"かめはめ波", w:["螺旋丸","波紋疾走","鬼滅の刃"], e:""},
+      {q:"「ワンピース」の主人公ルフィは、メラメラの実を食べて炎を自在に操る能力を得た。", ox:false, e:""},
+      {q:"「鬼滅の刃」の主人公・竈門炭治郎が使う呼吸法はどれか？", a:"水の呼吸", w:["風の呼吸","雷の呼吸","炎の呼吸"], e:""},
+      {q:"「NARUTO」の主人公・うずまきナルトは、砂隠れの里の忍者だ。", ox:false, e:""},
+      {q:"「ハンター×ハンター」でゴンの父親は誰か？", a:"ジン=フリークス", w:["コルトピ","シルバ=ゾルディック","ネテロ会長"], e:""},
+      {q:"「僕のヒーローアカデミア」の世界では人口の約80%が何らかの個性を持つ。", ox:true, e:""},
+      {q:"「呪術廻戦」の主人公・虎杖悠仁が持つ特殊な体の特徴はどれか？", a:"呪王・宿儺の器として機能する肉体", w:["再生能力","呪力の無限貯蔵","鋼鉄の皮膚"], e:""},
+      {q:"「進撃の巨人」の城壁都市で、最も外側にあるのは「ウォール・シーナ」だ。", ox:false, e:""},
+      {q:"「BLEACH」の主人公・黒崎一護の斬魄刀の名前はどれか？", a:"斬月", w:["崩玉","破面","天鎖斬月"], e:""},
+      {q:"「テニスの王子様」の主人公・越前リョーマは、イギリス帰りの天才サッカー少年だ。", ox:false, e:""},
+      {q:"「スラムダンク」の舞台となった高校の名前はどれか？", a:"湘北高校", w:["山王工業","陵南高校","翔陽高校"], e:""},
+      {q:"「ドラゴンボールZ」でフリーザを倒したのはスーパーサイヤ人に変身した孫悟空だ。", ox:true, e:""},
+      {q:"「ワンピース」で「七武海」とは何か？", a:"世界政府公認の海賊7人の総称", w:["海軍の最高幹部7人","4つの海の最強海賊団","空島に住む7神"], e:""},
+      {q:"「鬼滅の刃」では、鬼は太陽の光を浴びても何の影響も受けない。", ox:false, e:""},
+      {q:"「NARUTO」でナルトの師匠・自来也の忍術は何に関係するか？", a:"カエル", w:["タコ","ナメクジ","ヘビ"], e:""},
+      {q:"「僕のヒーローアカデミア」の主人公・緑谷出久の個性の名前はワン・フォー・オールだ。", ox:true, e:""},
+      {q:"「進撃の巨人」の主人公・エレン・イェーガーは何の力を持つか？", a:"巨人に変身する能力", w:["獣の巨人の力","戦槌の力","超硬化能力"], e:""},
+      {q:"「ドラゴンボール」のベジータは、ナメック星の長老だ。", ox:false, e:""},
+      {q:"「ワンピース」でロビンが食べた悪魔の実はどれか？", a:"ハナハナの実", w:["ドアドアの実","ゾオゾオの実","トゲトゲの実"], e:""},
+      {q:"「僕のヒーローアカデミア」のオールマイトの本名は八木俊典だ。", ox:true, e:""},
+      {q:"「NARUTO」でうちはイタチがサスケに施した幻術の名前はどれか？", a:"月読", w:["神威","天照","須佐能乎"], e:""},
+      {q:"「進撃の巨人」のリヴァイ兵長は人類最強の兵士と呼ばれる。", ox:true, e:""},
+      {q:"「スラムダンク」で主人公・桜木花道のポジションはどれか？", a:"パワーフォワード", w:["ポイントガード","センター","シューティングガード"], e:""},
+      {q:"「呪術廻戦」で五条悟が持つ特別な目は「写輪眼」と呼ばれる。", ox:false, e:""},
+      {q:"「鬼滅の刃」の炭治郎の妹・禰豆子が人間を守り続けた最大の理由はどれか？", a:"家族への強い愛情と絆", w:["無惨の命令に従わなかったから","特別な一族の出身だから","鬼の血が薄かったから"], e:""},
+      {q:"「ドラゴンボール」でドラゴンボールを7つ集めると神龍が現れて願いを叶えてくれる。", ox:true, e:""},
+      {q:"「ワンピース」の「四皇」はどんな存在か？", a:"世界最強クラスの海賊4人を指す称号", w:["海軍本部の最高幹部4人","4つの海の王者","世界政府の4人の元首"], e:""},
+      {q:"「Hunter×Hunter」でゴン=フリークスの念能力の系統は強化系だ。", ox:true, e:""},
+      {q:"「BLEACH」で黒崎一護が最初に戦った敵の種族は何か？", a:"虚", w:["死神","滅却師","完現術者"], e:""},
+      {q:"「テニスの王子様」に登場するSEIGAKUとは、聖光学院高校の略称だ。", ox:false, e:""},
+    ]
+  },
+  shoujo:{
+    name:"少女・恋愛アニメ", ji:"💕",
+    desc:"セーラームーン・まどか・カードキャプターなど",
+    pool:[
+      {q:"「セーラームーン」の主人公・月野うさぎが変身するセーラー戦士の名前はどれか？", a:"セーラームーン", w:["セーラーマーズ","セーラーヴィーナス","セーラーサターン"], e:""},
+      {q:"「CardCaptor Sakura」の主人公・木之本桜はクロウカードを集めるためにカードキャプターになった。", ox:true, e:""},
+      {q:"「フルーツバスケット」で草摩家の人々に隠された秘密は何か？", a:"十二支の動物に変身してしまう", w:["全員が神様の子孫","呪いで感情が消えた","吸血鬼の一族"], e:""},
+      {q:"「魔法少女まどか☆マギカ」の脚本は宮崎駿が担当した。", ox:false, e:""},
+      {q:"「魔法少女まどか☆マギカ」で魔法少女が望みを叶えてもらう代わりに引き受けることは何か？", a:"魔女と戦い続ける運命", w:["不老不死","記憶を消される","感情を失う"], e:""},
+      {q:"「ふしぎ遊戯」の主人公は、本ではなくゲームの世界に入り込んで戦士になる。", ox:false, e:""},
+      {q:"「彼氏彼女の事情」の主人公・宮沢雪野の学校での姿と家での姿の違いはどれか？", a:"学校では優等生だが家では素の自分をさらけ出す", w:["見た目は地味だが実は天才","優しい性格と冷酷な性格","人前では無口だが実は話し好き"], e:""},
+      {q:"「美少女戦士セーラームーン」のセーラームーンの武器にティアラがある。", ox:true, e:""},
+      {q:"「フルーツバスケット」の草摩由希が変身する動物はどれか？", a:"ネズミ", w:["ウサギ","ウマ","ネコ"], e:""},
+      {q:"「CardCaptor Sakura」でさくらを助けるケルベロス（ケロちゃん）の本来の姿は巨大なライオンだ。", ox:true, e:""},
+      {q:"「ヴァイオレット・エヴァーガーデン」の主人公が行う「自動手記人形」の仕事は何か？", a:"手紙の代筆", w:["料理の代行","歌のパフォーマンス","戦場での通信"], e:""},
+      {q:"「とらドラ！」の主人公コンビは高須竜児と逢坂大河だ。", ox:true, e:""},
+      {q:"「魔法少女まどか☆マギカ」でほむら・あかみの能力はどれか？", a:"時間を操る力", w:["予知能力","炎を操る力","念力"], e:""},
+      {q:"「CLANNAD」は、スタジオジブリが制作したオリジナル劇場アニメだ。", ox:false, e:""},
+      {q:"「化物語」シリーズの主人公・阿良々木暦が最初に助けた女の子は誰か？", a:"戦場ヶ原ひたぎ", w:["羽川翼","神原駿河","八九寺真宵"], e:""},
+      {q:"「Angel Beats!」の舞台は死後の世界にある学校だ。", ox:true, e:""},
+      {q:"「Re：ゼロから始める異世界生活」の主人公・ナツキ・スバルが持つ能力はどれか？", a:"死んだ時点に巻き戻る能力", w:["無限の魔法力","予知夢","時間停止"], e:""},
+      {q:"「俺ガイル（やはり俺の青春ラブコメはまちがっている）」の主人公は、比企谷八幡の妹・小町だ。", ox:false, e:""},
+      {q:"「あの日見た花の名前を僕達はまだ知らない」の通称はどれか？", a:"あの花", w:["僕花","花名","あの日"], e:""},
+      {q:"「氷菓」の主人公・折木奉太郎のモットーはやらなくていいことはやらない「省エネ」だ。", ox:true, e:""},
+      {q:"「ご注文はうさぎですか？」の舞台はどこか？", a:"ヨーロッパ風の街にあるカフェ", w:["海辺のリゾート地","東京の学校","田舎の農村"], e:""},
+      {q:"「暗殺教室」の殺せんせーは、生徒たちを暗殺しようとする敵キャラとして登場する。", ox:false, e:""},
+      {q:"「なかよし」を発行している出版社はどこか？", a:"講談社", w:["秋田書店","小学館","集英社"], e:""},
+      {q:"「マクロスΔ」に登場するアイドルグループの名前は「μ’s（ミューズ）」だ。", ox:false, e:""},
+      {q:"「クリィミーマミ」の主人公が持つ変身能力で変身した姿は何をしている人か？", a:"歌手", w:["女優","声優","モデル"], e:""},
+    ]
+  },
+  scifi:{
+    name:"SF・ロボットアニメ", ji:"🤖",
+    desc:"エヴァ・ガンダム・コードギアスなど",
+    pool:[
+      {q:"「新世紀エヴァンゲリオン」の主人公・碇シンジが乗るエヴァンゲリオンは何号機か？", a:"初号機", w:["弐号機","参号機","零号機"], e:""},
+      {q:"「機動戦士ガンダム」の初代主人公はシャア・アズナブルだ。", ox:false, e:""},
+      {q:"「コードギアス」でルルーシュが持つ能力「ギアス」はどんな能力か？", a:"相手に絶対に従わせる命令を下せる力", w:["未来予知","時間を止める力","テレパシー"], e:""},
+      {q:"「マクロス」シリーズでは歌が戦闘に重要な役割を果たす。", ox:true, e:""},
+      {q:"「天元突破グレンラガン」の主人公コンビはどれか？", a:"シモンとカミナ", w:["ルルーシュとスザク","シンジとレイ","アムロとシャア"], e:""},
+      {q:"「攻殻機動隊」の主人公・草薙素子は、機械を一切使わない生身の人間だ。", ox:false, e:""},
+      {q:"「新世紀エヴァンゲリオン」でシンジとゲンドウの関係は何か？", a:"父と息子", w:["兄と弟","上司と部下","師匠と弟子"], e:""},
+      {q:"「カウボーイビバップ」の主人公スパイク・スピーゲルの職業は宇宙海賊だ。", ox:false, e:""},
+      {q:"「コードギアス」で仮面の騎士「ゼロ」の正体は誰か？", a:"ルルーシュ・ランペルージ", w:["CC","シャーリー","スザク"], e:""},
+      {q:"「コードギアス」でブリタニア帝国に支配された日本はエリア11と呼ばれる。", ox:true, e:""},
+      {q:"「新世紀エヴァンゲリオン」に登場する敵の総称は何か？", a:"使徒", w:["悪魔","異形","天使"], e:""},
+      {q:"「攻殻機動隊」の世界観はサイバーパンクをベースにしている。", ox:true, e:""},
+      {q:"「天元突破グレンラガン」で「ドリル」が象徴するものはどれか？", a:"魂・熱血・可能性", w:["愛情","未来への道","科学技術"], e:""},
+      {q:"「マクロスF」のシェリル・ノームとランカ・リーは、敵のパイロットとして登場する。", ox:false, e:""},
+      {q:"「フルメタル・パニック！」の主人公・相良宗介の本業は何か？", a:"軍人", w:["探偵","学生","傭兵"], e:""},
+      {q:"「新世紀エヴァンゲリオン」の使徒の名前は旧約聖書の天使名に由来するものが多い。", ox:true, e:""},
+      {q:"「機動戦士ガンダム00」の主人公・刹那が搭乗するガンダムはどれか？", a:"エクシア", w:["キュリオス","ヴァーチェ","ダブルオー"], e:""},
+      {q:"「銀河英雄伝説」は、中世ヨーロッパの騎士を描いたファンタジー作品だ。", ox:false, e:""},
+      {q:"「SSSS.GRIDMAN」の主人公・響裕太を助けるグリッドマンが宿ったのはどこか？", a:"古いパソコンのモニター", w:["スマートフォン","テレビのアンテナ","ゲーム機"], e:""},
+      {q:"「スクライド」の主人公・カズマは右腕を変化させるアルターを使う。", ox:true, e:""},
+      {q:"「伝説巨神イデオン」の監督は誰か？", a:"富野由悠季", w:["細田守","宮崎駿","庵野秀明"], e:""},
+      {q:"「機動戦士ガンダム」ではニュータイプという特殊な感知能力を持つ人間が登場する。", ox:true, e:""},
+      {q:"「カウボーイビバップ」の舞台となる主な場所はどこか？", a:"太陽系全体", w:["地球のみ","月面都市","宇宙ステーション"], e:""},
+      {q:"「コードギアス」の主人公ルルーシュは、力任せの肉弾戦を得意とするキャラクターだ。", ox:false, e:""},
+      {q:"「新世紀エヴァンゲリオン」でゲンドウが追い求めた「人類補完計画」とは何か？", a:"人類を一つの存在に融合させること", w:["エヴァを完成させること","地球を守ること","使徒を全滅させること"], e:""},
+    ]
+  },
+  nichijou:{
+    name:"日常・学園アニメ", ji:"🏫",
+    desc:"けいおん・ハルヒ・ハイキューなど",
+    pool:[
+      {q:"「けいおん！」の主人公・平沢唯が軽音部で担当する楽器はどれか？", a:"ギター", w:["ドラム","キーボード","ベース"], e:""},
+      {q:"「涼宮ハルヒの憂鬱」の主人公・涼宮ハルヒは自分が特別な存在であることを自覚している。", ox:false, e:""},
+      {q:"「涼宮ハルヒの憂鬱」でハルヒが作った部活の名前はどれか？", a:"SOS団", w:["時間旅行部","超能力研究会","宇宙人倶楽部"], e:""},
+      {q:"「らき☆すた」の主人公・泉こなたは、アニメやゲームに全く興味のない優等生キャラだ。", ox:false, e:""},
+      {q:"「ハイキュー!!」の主人公・日向翔陽が目標にする称号はどれか？", a:"小さな巨人", w:["コート上の支配者","最強スパイカー","空を飛ぶ天才"], e:""},
+      {q:"「ハイキュー!!」は、高校バスケットボールを題材にしたスポーツアニメだ。", ox:false, e:""},
+      {q:"「俺ガイル（やはり俺の青春ラブコメはまちがっている）」の八幡の所属する部活はどれか？", a:"奉仕部", w:["料理部","文芸部","軽音部"], e:""},
+      {q:"「氷菓」は米澤穂信の小説が原作で京都アニメーションが制作した。", ox:true, e:""},
+      {q:"「ゆるキャン△」のキャラクター・志摩リンが好きなアウトドア活動は何か？", a:"ソロキャンプ", w:["釣り","サイクリング","登山"], e:""},
+      {q:"「けいおん！」の放課後ティータイムが文化祭で演奏した曲に「ふわふわ時間」がある。", ox:true, e:""},
+      {q:"「暗殺教室」の殺せんせーが教える生徒たちの目標は何か？", a:"殺せんせーを暗殺する", w:["全国学力テストで1位になる","卒業式に感動させる","部活で全国優勝する"], e:""},
+      {q:"「ちびまる子ちゃん」の作者はさくらももこだ。", ox:true, e:""},
+      {q:"「らき☆すた」に登場するキャラクター・柊かがみの性格として最も近いのはどれか？", a:"ツンデレで成績優秀", w:["天然でおとなしい","無口で謎めいた存在","明るくてスポーツ万能"], e:""},
+      {q:"「宇宙よりも遠い場所（よりもい）」で主人公たちが目指したのは北極点だ。", ox:false, e:""},
+      {q:"「ガールズ&パンツァー」の主人公・西住みほが転校した先の高校はどこか？", a:"大洗女子学園", w:["サンダース大学附属高校","黒森峰女学園","プラウダ高校"], e:""},
+      {q:"「だがしかし」は駄菓子をテーマにしたアニメだ。", ox:true, e:""},
+      {q:"「NEW GAME!」の主人公・涼風青葉の夢はどれか？", a:"ゲームキャラクターのデザイナーになる", w:["声優になる","プロゲーマーになる","マンガ家になる"], e:""},
+      {q:"「君の名は。」は宮崎駿監督の劇場アニメ作品だ。", ox:false, e:""},
+      {q:"「日常」でハカセ（東雲なの）が背中につけているゼンマイについて正しいのはどれか？", a:"作中で明確な説明はなく謎のまま", w:["飾りにすぎない","動力源として機能する","感情を表現するアンテナ"], e:""},
+      {q:"「けいおん！」の舞台となった高校は滋賀県がモデルと言われている。", ox:true, e:""},
+      {q:"「スーパーダンガンロンパ2」の登場人物にもなるモノクマを動かしている首謀者は誰か？", a:"江ノ島盾子", w:["霧切響子","日向創","苗木誠"], e:""},
+      {q:"「ガーリッシュナンバー」の主人公・烏丸千歳の職業はプロ野球選手だ。", ox:false, e:""},
+      {q:"「クラスルームの暗殺者」の舞台となるクラスは何組か？", a:"3年E組", w:["3年C組","2年B組","1年A組"], e:""},
+      {q:"「ゆるキャン△」の舞台は主に山梨県・静岡県周辺だ。", ox:true, e:""},
+      {q:"「らき☆すた」の柊かがみの双子の妹の名前はどれか？", a:"柊つかさ", w:["柊こよみ","柊みらい","柊ゆたか"], e:""},
+    ]
+  },
+  ghibli:{
+    name:"スタジオジブリ", ji:"🌿",
+    desc:"トトロ・千と千尋・もののけ姫など",
+    pool:[
+      {q:"「となりのトトロ」でサツキとメイの父親の職業はどれか？", a:"大学教授", w:["医師","農家","小学校の先生"], e:""},
+      {q:"「千と千尋の神隠し」で千尋の両親は豚に変えられてしまう。", ox:true, e:""},
+      {q:"「風の谷のナウシカ」でナウシカが乗り回す小型飛行器の名前はどれか？", a:"メーヴェ", w:["ペジテ号","コルベット","ガンシップ"], e:""},
+      {q:"「魔女の宅急便」の主人公・キキは、白い犬のジジと一緒に旅をする。", ox:false, e:""},
+      {q:"「もののけ姫」の主人公・アシタカが呪いをかけられたのは何の動物か？", a:"イノシシ", w:["熊","シシ神","オオカミ"], e:""},
+      {q:"「天空の城ラピュタ」でラピュタを復活させようとする悪役の名前は「カオナシ」だ。", ox:false, e:""},
+      {q:"「千と千尋の神隠し」で千尋が働く湯屋の名前はどれか？", a:"油屋", w:["火屋","風屋","水屋"], e:""},
+      {q:"「ハウルの動く城」の原作はイギリス人作家ダイアナ・ウィン・ジョーンズの小説だ。", ox:true, e:""},
+      {q:"「もののけ姫」でモロの君が率いるのはどんな動物の群れか？", a:"オオカミ", w:["熊","イノシシ","シカ"], e:""},
+      {q:"「風立ちぬ」の主人公・堀越二郎は実在の航空技術者をモデルにしている。", ox:true, e:""},
+      {q:"「耳をすませば」の主人公・月島雫が図書館で出会う少年は誰か？", a:"天沢聖司", w:["バロン","杉村","西老人"], e:""},
+      {q:"「かぐや姫の物語」は、宮崎駿が監督したスタジオジブリ作品だ。", ox:false, e:""},
+      {q:"「魔女の宅急便」でキキが住み込む街のモデルになったとされる国はどこか？", a:"スウェーデン", w:["イタリア","スペイン","フランス"], e:""},
+      {q:"「崖の上のポニョ」の舞台は、雪深い山奥の村だ。", ox:false, e:""},
+      {q:"「おもひでぽろぽろ」の主人公・タエ子が旅した場所はどこか？", a:"山形県", w:["北海道","沖縄","京都"], e:""},
+      {q:"「千と千尋の神隠し」はアカデミー賞長編アニメーション賞を受賞した。", ox:true, e:""},
+      {q:"「天空の城ラピュタ」でパズーとシータが唱えたラピュタを破壊する言葉はどれか？", a:"バルス", w:["ムスカ","ラピュタ","レプカ"], e:""},
+      {q:"「風の谷のナウシカ」の腐海は汚染された土地を浄化するために存在していた。", ox:true, e:""},
+      {q:"「ハウルの動く城」でソフィーに魔法をかけて老婆にした魔女の名前はどれか？", a:"荒地の魔女", w:["サリマン","ヒン","カルシファー"], e:""},
+      {q:"宮崎駿は、スタジオジブリの設立には一切関わっていない外部の監督だ。", ox:false, e:""},
+      {q:"「となりのトトロ」でトトロが住む場所はどこか？", a:"クスノキの中", w:["竹林","洞窟の中","川の底"], e:""},
+      {q:"「もののけ姫」のサン（もののけ姫）は人間でありながら山犬に育てられた。", ox:true, e:""},
+      {q:"「紅の豚」の主人公・ポルコ・ロッソが操るのはどんな乗り物か？", a:"飛行艇", w:["潜水艦","船","戦闘機"], e:""},
+      {q:"「アーヤと魔女」は、スタジオジブリ初の手描きセル画アニメ作品だ。", ox:false, e:""},
+      {q:"「思い出のマーニー」の主人公・杏奈が出会う不思議な少女の名前はどれか？", a:"マーニー", w:["サツキ","ナウシカ","ハク"], e:""},
+    ]
+  },
+  classic:{
+    name:"名作・クラシック", ji:"🌟",
+    desc:"ドラえもん・サザエさん・コナンなど",
+    pool:[
+      {q:"「アルプスの少女ハイジ」でハイジが暮らすアルプスのおじいさんの呼び名はどれか？", a:"おんじ", w:["ペーター","ロッテンマイヤー先生","クララのパパ"], e:""},
+      {q:"「ドラえもん」の主人公・野比のび太は、勉強も運動も得意な優等生だ。", ox:false, e:""},
+      {q:"「サザエさん」に登場するイソノ家の父親の名前はどれか？", a:"波平", w:["カツオ","マスオ","フグ田"], e:""},
+      {q:"「銀河鉄道999」に登場するメーテルは謎の美しい女性として鉄郎の旅に同行する。", ox:true, e:""},
+      {q:"「名探偵コナン」の主人公・江戸川コナンの本当の名前はどれか？", a:"工藤新一", w:["黒羽快斗","鈴木次郎吉","毛利蘭"], e:""},
+      {q:"「ちびまる子ちゃん」の舞台は静岡県清水市（現・静岡市清水区）だ。", ox:true, e:""},
+      {q:"「宇宙戦艦ヤマト」で地球を救うために向かった星はどれか？", a:"イスカンダル", w:["ラゼル","ガミラス","メルダー星"], e:""},
+      {q:"「鉄腕アトム」の主人公・アトムは天馬博士が亡くなった息子をモデルに作ったロボットだ。", ox:true, e:""},
+      {q:"「キャプテン翼」の主人公・大空翼が目指す夢はどれか？", a:"ワールドカップで世界一になる", w:["国内リーグで得点王になる","オリンピックに出る","プロ野球選手になる"], e:""},
+      {q:"「名探偵コナン」の黒の組織のボスは「あの方」と呼ばれ長らく正体が謎だった。", ox:true, e:""},
+      {q:"「ルパン三世」のルパン三世の祖父は誰か？", a:"怪盗アルセーヌ・ルパン", w:["石川五ェ門の師匠","銭形警部の祖父","峰不二子の父"], e:""},
+      {q:"「タッチ」で、野球の才能がありながら若くして亡くなるのは主人公・上杉達也本人だ。", ox:false, e:""},
+      {q:"「魔法使いサリー」は日本初の何アニメとされているか？", a:"魔法少女アニメ", w:["ロボットアニメ","学園アニメ","スポーツアニメ"], e:""},
+      {q:"「ゲゲゲの鬼太郎」の主人公・鬼太郎の父親は目玉おやじだ。", ox:true, e:""},
+      {q:"「機動戦士ガンダム」が最初に放送されたのはいつか？", a:"1979年", w:["1985年","1982年","1975年"], e:""},
+      {q:"「美少女戦士セーラームーン」のアニメは2002年にスタートした。", ox:false, e:""},
+      {q:"「Dr.スランプ アラレちゃん」のアラレちゃんが住む村の名前はどれか？", a:"ペンギン村", w:["ひまわり村","タコ村","ロボット村"], e:""},
+      {q:"「ドラえもん」の四次元ポケットはおなかにある。", ox:true, e:""},
+      {q:"「北斗の拳」の主人公・ケンシロウが使う格闘技の名前はどれか？", a:"北斗神拳", w:["南斗水鳥拳","天才拳","修羅拳"], e:""},
+      {q:"「あしたのジョー」の主人公・矢吹丈はプロレスラーだ。", ox:false, e:""},
+      {q:"「ルパン三世 カリオストロの城」は宮崎駿が監督した映画だ。", a:"正しい", w:["半分正しい","間違い","不明"], e:""},
+      {q:"「タッチ」の作者は鳥山明だ。", ox:false, e:""},
+      {q:"「花より男子」の主人公・牧野つくしが通う学校の名前はどれか？", a:"英徳学園", w:["桜蘭高校","青音大学付属高校","聖夜高校"], e:""},
+      {q:"「キャプテン翼」の主人公・大空翼のポジションはゴールキーパーだ。", ox:false, e:""},
+      {q:"「宇宙戦艦ヤマト」でヤマトの艦長・沖田十三が抱える病は何か？", a:"放射線病", w:["戦傷による後遺症","心臓病","宇宙病"], e:""},
+    ]
+  },
 };
-let currentGenre=null,questions=[],qIndex=0,score=0,correctCount=0,wrongCount=0;
-let timeLeft=120,timer=null,answered=false,wrongAnswers=[],playerName='';
-let typingTimeout=null,displayedText='',answerPhase=false;
-const TYPING_SPEED=55;
-function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-let currentRankingGenre=null;
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
-let toastTimer=null;
-function showToast(msg,type='',d=4500){const t=document.getElementById('toast');t.textContent=msg;t.className='show'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>hideToast(),d);}
-function hideToast(){clearTimeout(toastTimer);const t=document.getElementById('toast');if(t)t.className='';}
+
+const ORDER = ['shonen','shoujo','scifi','nichijou','ghibli','classic'];
+
+/* ---------- 状態 ---------- */
+let curGenre=null, pendingGenre=null;
+let questions=[], idx=0, score=0, correctCount=0, wrongList=[], timeLeft=START_TIME;
+let timerId=null, typingTimeout=null, fullQText='', answered=false, isOX=false;
+let lastResult=null, reviewIdx=0;
+
+/* ---------- ジャンルカード ---------- */
 function buildGenreCards(){
-  const grid=document.getElementById('genres-grid');
-  grid.innerHTML=GENRES.map(g=>`<div class="genre-card" onclick="selectGenre('${g.id}')"><div class="genre-accent" style="background:${g.color};"></div><span class="genre-icon">${g.icon}</span><div class="genre-name">${g.name}</div><div class="genre-desc">${g.desc}</div><div class="genre-count">全${DB[g.id].length}問収録 ／ 10問ランダム出題</div><span class="genre-start">▶ START</span></div>`).join('');
-}
-function selectGenre(id){
-  currentGenre=GENRES.find(g=>g.id===id);
-  document.getElementById('intro-icon').textContent=currentGenre.icon;
-  document.getElementById('intro-name').textContent=currentGenre.name;
-  document.getElementById('intro-desc').textContent=currentGenre.desc;
-  if(window.TomyStamp){const saved=TomyStamp.getPlayer();const inp=document.getElementById('name-input');if(saved&&!inp.value)inp.value=saved;}
-  showScreen('screen-intro');
-}
-function startGame(){
-  playerName=document.getElementById('name-input').value.trim()||'ゲスト';
-  if(window.TomyStamp&&playerName!=='ゲスト')TomyStamp.setPlayer(playerName);
-  questions=shuffle(DB[currentGenre.id]).slice(0,10);
-  qIndex=0;score=0;correctCount=0;wrongCount=0;wrongAnswers=[];
-  showScreen('screen-quiz');showQuestion();startTimer();
-}
-function retryGame(){showScreen('screen-intro');}
-function startTimer(){clearInterval(timer);timeLeft=120;updateTimerDisplay();timer=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timer);endGame();}},1000);}
-function updateTimerDisplay(){const el=document.getElementById('quiz-timer');el.textContent=timeLeft;el.className='quiz-timer'+(timeLeft<=10?' danger':'');}
-function showQuestion(){
-  const q=questions[qIndex];answered=false;answerPhase=false;
-  document.getElementById('quiz-qnum').textContent=`Q${qIndex+1} / 10`;
-  document.getElementById('quiz-progress-fill').style.width=`${(qIndex/10)*100}%`;
-  document.getElementById('quiz-score').textContent=`${score} pt`;
-  document.getElementById('result-overlay').classList.remove('show');
-
-  const badge=document.getElementById('quiz-type-badge');
-  if(q.type==='4'){badge.textContent='4択';badge.className='quiz-type-badge type-4';}
-  else{badge.textContent='○×';badge.className='quiz-type-badge type-ox';}
-
-  // 選択肢は隠す・バザーボタンを出す
-  const choices=document.getElementById('quiz-choices');
-  choices.style.display='none';choices.innerHTML='';
-  const buzzer=document.getElementById('buzzer-btn');
-  buzzer.style.display='block';buzzer.disabled=false;
-
-  // 問題文タイプライター開始
-  const el=document.getElementById('quiz-q');
-  el.style.transition='none';el.style.visibility='visible';el.style.opacity='1';
-  typeQuestion(q.q,el);
+  const grid=document.getElementById('genreGrid');
+  grid.innerHTML='';
+  ORDER.forEach(key=>{
+    const g=QUIZ[key];
+    const card=document.createElement('div');
+    card.className='gcard';
+    card.onclick=()=>openModal(key);
+    card.innerHTML=`<div class="ji">${g.ji}</div><div class="nm">${g.name}</div><div class="ct">全${g.pool.length}問から出題</div>`;
+    grid.appendChild(card);
+  });
 }
 
-// タイプライター表示（バザーを押すまで流れる）
-function typeQuestion(text,el){
-  if(typingTimeout)clearTimeout(typingTimeout);
-  displayedText='';let i=0;
-  (function next(){
-    if(i<text.length){
-      displayedText+=text[i++];
-      el.innerHTML=escapeHtml(displayedText)+'<span class="cursor-blink"></span>';
-      typingTimeout=setTimeout(next,TYPING_SPEED);
-    }else{
-      el.innerHTML=escapeHtml(displayedText);
-    }
+/* ---------- 確認モーダル（最後の確認） ---------- */
+function openModal(key){
+  pendingGenre=key;
+  const g=QUIZ[key];
+  document.getElementById('modalJi').textContent=g.ji;
+  document.getElementById('modalName').textContent=g.name;
+  document.getElementById('modalDesc').textContent=g.desc;
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('show');pendingGenre=null;}
+function confirmStart(){
+  const key=pendingGenre;
+  document.getElementById('modalBg').classList.remove('show');
+  if(key) startGame(key);
+}
+function randomGenre(){openModal(ORDER[Math.floor(Math.random()*ORDER.length)]);}
+
+/* ---------- ユーティリティ ---------- */
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ---------- ゲーム開始 ---------- */
+function startGame(key){
+  curGenre=key;
+  const pool=QUIZ[key].pool;
+  questions=shuffle(pool).slice(0,Math.min(TOTAL_Q,pool.length));
+  idx=0;score=0;correctCount=0;wrongList=[];timeLeft=START_TIME;
+  document.getElementById('hudScore').textContent='0';
+  showScreen('quiz');
+  startTimer();
+  renderQuestion();
+}
+
+/* ---------- タイマー ---------- */
+function startTimer(){
+  clearInterval(timerId);
+  updateTimeUI();
+  timerId=setInterval(()=>{
+    timeLeft--;
+    if(timeLeft<=0){timeLeft=0;updateTimeUI();endGame();return;}
+    updateTimeUI();
+  },1000);
+}
+function updateTimeUI(){
+  document.getElementById('hudTime').textContent=timeLeft;
+  const pct=Math.max(0,Math.min(100,(timeLeft/START_TIME)*100));
+  document.getElementById('timeFill').style.width=pct+'%';
+  const pill=document.getElementById('timePill');
+  if(timeLeft<=15)pill.classList.add('warn');else pill.classList.remove('warn');
+}
+
+/* ---------- 出題（タイプライター＋早押し） ---------- */
+function renderQuestion(){
+  answered=false;
+  const q=questions[idx];
+  isOX=(typeof q.ox==='boolean');
+  document.getElementById('qTag').textContent=QUIZ[curGenre].name;
+  document.getElementById('qType').textContent=isOX?'○×問題':'4択問題';
+  document.getElementById('progress').textContent=`第 ${idx+1} 問 / ${questions.length}`;
+
+  // 選択肢を隠し、回答ボタンを表示
+  const box=document.getElementById('choices');
+  box.classList.remove('show');box.className='choices';box.innerHTML='';
+  document.getElementById('buzzWrap').style.display='block';
+
+  // タイプライター開始
+  typeQuestion(q.q);
+}
+function typeQuestion(text){
+  clearTimeout(typingTimeout);
+  fullQText=text;
+  const el=document.getElementById('qText');
+  el.classList.remove('fade-out','done');
+  el.textContent='';
+  let i=0;
+  (function step(){
+    el.textContent=text.slice(0,i);
+    if(i<text.length){i++;typingTimeout=setTimeout(step,TYPING_SPEED);}
+    else{el.classList.add('done');}
   })();
 }
 
-// 「回答する！」押下 → タイプライター停止 → 問題文フェードアウト → 選択肢表示
-function onBuzzer(){
-  if(answerPhase)return;answerPhase=true;
-  if(typingTimeout)clearTimeout(typingTimeout);
-  const el=document.getElementById('quiz-q');
-  el.style.transition='opacity 0.2s ease';
-  el.style.opacity='0';el.style.visibility='hidden';
-  document.getElementById('buzzer-btn').style.display='none';
-  renderChoices(questions[qIndex]);
-}
+/* 「回答する！」→ タイプ停止 → 問題文フェードアウト → 選択肢表示 */
+function buzz(){
+  if(answered)return;
+  clearTimeout(typingTimeout);
+  const el=document.getElementById('qText');
+  el.classList.add('fade-out');
+  document.getElementById('buzzWrap').style.display='none';
 
-function renderChoices(q){
-  const wrap=document.getElementById('quiz-choices');
-  wrap.style.display='block';
-  if(q.type==='4'){
-    const lb=['A','B','C','D'];
-    wrap.innerHTML=q.c.map((c,i)=>`<button class="choice-btn" onclick="answer4(${i})"><span class="choice-label">${lb[i]}</span>${escapeHtml(c)}</button>`).join('');
+  buildChoices(questions[idx]);
+  setTimeout(()=>{
+    const box=document.getElementById('choices');
+    box.style.display='grid';
+    void box.offsetWidth;
+    box.classList.add('show');
+  },280);
+}
+function buildChoices(q){
+  const box=document.getElementById('choices');
+  box.innerHTML='';box.className='choices';
+  if(isOX){
+    box.classList.add('ox');
+    // ◯ → ✕ の並びを固定（偏り防止はプール側で均等化）
+    [['◯',true],['✕',false]].forEach(([mark,val])=>{
+      const b=document.createElement('button');
+      b.className='choice ox-mark';b.textContent=mark;
+      b.onclick=()=>pick(b,val===q.ox,q);
+      box.appendChild(b);
+    });
   }else{
-    wrap.innerHTML=`<div class="ox-choices"><button class="ox-btn" onclick="answerOX(true)">⭕<span>正しい</span></button><button class="ox-btn" onclick="answerOX(false)">❌<span>誤り</span></button></div>`;
+    // {text,correct} を作りシャッフル（正解位置の偏り防止）
+    let opts=[{text:q.a,correct:true}].concat(q.w.map(w=>({text:w,correct:false})));
+    opts=shuffle(opts);
+    opts.forEach(o=>{
+      const b=document.createElement('button');
+      b.className='choice';b.textContent=o.text;
+      b.onclick=()=>pick(b,o.correct,q);
+      box.appendChild(b);
+    });
   }
 }
 
-// 選択後：問題文を全文フェードインで再表示
-function revealQuestion(text){
-  const el=document.getElementById('quiz-q');
-  el.textContent=text;
-  el.style.transition='opacity 0.3s ease';
-  el.style.visibility='visible';
-  el.style.opacity='1';
-}
-function answer4(idx){if(answered)return;answered=true;const q=questions[qIndex];const btns=document.querySelectorAll('.choice-btn');btns.forEach(b=>b.disabled=true);btns[q.a].classList.add('correct');if(idx!==q.a)btns[idx].classList.add('wrong');revealQuestion(q.q);const userAns=q.c[idx];setTimeout(()=>showResult(idx===q.a,q.c[q.a],userAns,q.q),600);}
-function answerOX(val){if(answered)return;answered=true;const q=questions[qIndex];const btns=document.querySelectorAll('.ox-btn');btns.forEach(b=>b.disabled=true);btns[q.a?0:1].classList.add('correct');if(val!==q.a)btns[val?0:1].classList.add('wrong');revealQuestion(q.q);const userAns=val?'○（正しい）':'×（誤り）';setTimeout(()=>showResult(val===q.a,q.a?'○（正しい）':'×（誤り）',userAns,q.q),600);}
-function showResult(isCorrect,correctAns,userAns,qText){
-  if(isCorrect){score+=10;correctCount++;timeLeft=Math.min(timeLeft+5,999);}
-  else{wrongCount++;timeLeft=Math.max(timeLeft-5,0);wrongAnswers.push({q:qText,a:correctAns});}
-  updateTimerDisplay();
-  document.getElementById('quiz-score').textContent=`${score} pt`;
-  const box=document.getElementById('result-box-ov');
-  box.className='result-box-ov '+(isCorrect?'correct':'incorrect');
-  document.getElementById('result-emoji').textContent=isCorrect?'✅':'❌';
-  document.getElementById('result-label-ov').textContent=isCorrect?'正解！':'不正解...';
-  document.getElementById('result-ov-q').textContent=qText;
-  document.getElementById('result-ov-a').textContent=correctAns;
+/* ---------- 解答処理 ---------- */
+function pick(btn,isCorrect,q){
+  if(answered)return;
+  answered=true;
+  clearInterval(timerId); // オーバーレイ閲覧中はタイマー停止
+
+  const buttons=document.querySelectorAll('#choices .choice');
+  buttons.forEach(b=>b.disabled=true);
+  if(btn&&btn.blur)btn.blur();
+  const correctText=isOX?(q.ox?'◯（正しい）':'✕（誤り）'):q.a;
+
   if(isCorrect){
-    document.getElementById('result-ov-fb').innerHTML='<span class="hl plus">+10点</span>　<span class="hl plus">残り時間 +5秒！</span>';
-    showToast('✅ 正解！ +10点 +5秒','ok');
+    score+=10;correctCount++;
+    timeLeft=Math.min(MAX_TIME,timeLeft+5);
+    btn.classList.add('correct');
+    document.getElementById('hudScore').textContent=score;
+    updateTimeUI();
+    showToast(true,'✅ 正解！','+10点　時間 +5秒　⏱');
   }else{
-    document.getElementById('result-ov-fb').innerHTML=`あなたの回答：「${escapeHtml(userAns)}」<br>正解は <b>「${escapeHtml(correctAns)}」</b>　<span class="hl minus">（−5秒）</span>`;
-    showToast('❌ 不正解 −5秒','ng');
+    timeLeft=Math.max(0,timeLeft-5);
+    btn.classList.add('wrong');
+    buttons.forEach(b=>{
+      if(isOX){ if((b.textContent==='◯')===q.ox)b.classList.add('correct'); }
+      else{ if(b.textContent===q.a)b.classList.add('correct'); }
+    });
+    updateTimeUI();
+    showToast(false,'❌ 不正解',`正解は「${isOX?(q.ox?'◯':'✕'):q.a}」（時間 −5秒）`);
+    wrongList.push({
+      q:q.q,
+      yours: isOX?(q.ox?'✕':'◯'):btn.textContent,
+      correct: correctText,
+      e:q.e||''
+    });
   }
-  document.getElementById('result-overlay').classList.add('show');
+
+  // 問題文を全文でフェードイン再表示
+  const el=document.getElementById('qText');
+  el.classList.remove('fade-out');
+  el.classList.add('done');
+  el.textContent=fullQText;
+
+  // 0.6秒後に正誤オーバーレイ
+  setTimeout(()=>showResultOverlay(isCorrect,q,correctText),600);
 }
-function nextQuestion(){document.getElementById('result-overlay').classList.remove('show');hideToast();qIndex++;if(qIndex>=10){clearInterval(timer);endGame();}else{showQuestion();}}
+
+/* ---------- 正誤オーバーレイ ---------- */
+function showResultOverlay(isCorrect,q,correctText){
+  const ov=document.getElementById('resultOverlay');
+  const card=document.getElementById('roCard');
+  card.className='ro-card '+(isCorrect?'ok':'ng');
+  document.getElementById('roMark').textContent=isCorrect?'◯':'✕';
+  document.getElementById('roHead').textContent=isCorrect?'正解！':'残念…';
+  document.getElementById('roAns').innerHTML=`正解<b>${escapeHtml(correctText)}</b>`;
+  const ex=document.getElementById('roExplain');
+  if(q.e){ex.style.display='block';ex.innerHTML='💡 '+escapeHtml(q.e);}
+  else{ex.style.display='none';}
+  ov.classList.add('show');
+}
+
+/* 「次の問題へ」→ 押した瞬間にトーストを消す */
+function nextQuestion(){
+  hideToast();
+  document.getElementById('resultOverlay').classList.remove('show');
+  idx++;
+  if(idx>=questions.length || timeLeft<=0){
+    endGame();
+  }else{
+    startTimer();      // 停止していたタイマーを再開
+    renderQuestion();
+  }
+}
+
+/* ---------- トースト ---------- */
+function showToast(ok,big,small){
+  const t=document.getElementById('toast');
+  t.className='toast '+(ok?'ok':'ng');
+  document.getElementById('toastBig').textContent=big;
+  document.getElementById('toastSmall').textContent=small;
+  void t.offsetWidth;
+  t.classList.add('show');
+}
+function hideToast(){document.getElementById('toast').classList.remove('show');}
+
+/* ---------- 終了・結果 ---------- */
 function endGame(){
-  clearInterval(timer);
-  if(typingTimeout)clearTimeout(typingTimeout);
-  document.getElementById('result-overlay').classList.remove('show');
-  const bonus=Math.max(timeLeft,0),total=score+bonus;
-  const medal=correctCount>=9?'🥇':correctCount>=7?'🥈':correctCount>=5?'🥉':'😅';
-  document.getElementById('result-genre').textContent=currentGenre.icon+' '+currentGenre.name;
-  document.getElementById('result-score').textContent=total;
-  document.getElementById('result-medal').textContent=medal;
-  document.getElementById('result-correct').textContent=correctCount;
-  document.getElementById('result-wrong').textContent=wrongCount;
-  document.getElementById('result-bonus').textContent='+'+bonus;
-  const ws=document.getElementById('wrong-section');
-  if(wrongAnswers.length>0){ws.innerHTML=`<div class="wrong-label">// ❌ 間違えた問題（${wrongAnswers.length}問）</div>`+wrongAnswers.map((w,i)=>`<div class="wrong-item"><div class="wrong-item-num">問${i+1}</div><div class="wrong-item-q">${w.q}</div><div class="wrong-item-ans"><span class="wrong-item-ans-label">正解</span><span class="wrong-item-ans-text">${w.a}</span></div></div>`).join('');}
-  else{ws.innerHTML='<div style=\'text-align:center;padding:20px;font-family:\'Share Tech Mono\',monospace;font-size:12px;color:var(--purple3);\'>🎉 全問正解！</div>';}
-  saveRanking(currentGenre.id,playerName,total,correctCount);
-  if(window.TomyStamp&&playerName!=='ゲスト'){TomyStamp.send('anime-quiz',currentGenre.name,correctCount).then(r=>{if(r.ok)showToast('⭐ スタンプ獲得！ランキングに反映されます');});}
-  showScreen('screen-result');
+  clearInterval(timerId);
+  clearTimeout(typingTimeout);
+  hideToast();
+  document.getElementById('resultOverlay').classList.remove('show');
+
+  const base=correctCount*10;
+  const bonus=timeLeft;
+  const total=base+bonus;
+  lastResult={genre:curGenre,total,base,bonus,correct:correctCount,saved:false,hanamaru:false,stamped:false};
+
+  document.getElementById('resGenre').textContent='【'+QUIZ[curGenre].name+'】';
+  document.getElementById('resTotal').textContent=total;
+  document.getElementById('resCorrect').textContent=correctCount;
+  document.getElementById('resBase').textContent=base;
+  document.getElementById('resBonus').textContent=bonus;
+
+  const badge=document.getElementById('resBadge');
+  let label,bg,col;
+  if(correctCount>=10){label='🏆 アニメ博士！全問正解';bg='linear-gradient(135deg,#ffce3a,#e0a91f)';col='#2a1f04';}
+  else if(correctCount>=8){label='🎌 筋金入りのアニメ通';bg='linear-gradient(135deg,#ff0033,#c20026)';col='#fff';}
+  else if(correctCount>=6){label='✨ なかなかの目利き';bg='rgba(255,0,51,.18)';col='#ff6b86';}
+  else if(correctCount>=4){label='🌱 これから沼へ';bg='rgba(255,255,255,.1)';col='#ece6e9';}
+  else{label='🔰 まずは入門から！';bg='rgba(255,255,255,.06)';col='#b3a9af';}
+  badge.textContent=label;badge.style.background=bg;badge.style.color=col;
+
+  document.getElementById('reviewBtn').style.display=wrongList.length?'block':'none';
+  document.getElementById('saveBtn').disabled=false;
+  document.getElementById('saveBtn').textContent='📥 ランキングに登録';
+
+  // 花丸スタンプ（正解率90%以上＝10問中9問以上）
+  const hm=document.getElementById('hanamaru');
+  if(correctCount>=9){
+    if(hm)hm.style.display='block';
+    lastResult.hanamaru=true;
+    // ポータル登録名が既にあれば終了時に自動送信（重複防止）
+    if(window.TomyStamp && TomyStamp.getPlayer() && !lastResult.stamped){
+      lastResult.stamped=true;
+      try{TomyStamp.send(STAMP_GAME_ID,QUIZ[curGenre].name,correctCount);}catch(e){}
+    }
+  }else{
+    if(hm)hm.style.display='none';
+  }
+  // 登録名欄に既存のポータル名を自動入力
+  try{
+    const pn=document.getElementById('playerName');
+    if(window.TomyStamp && pn && !pn.value){const sv=TomyStamp.getPlayer();if(sv)pn.value=sv;}
+  }catch(e){}
+
+  showScreen('result');
 }
-const LS_KEY='anime_quiz_jp_ranking';
-function saveRanking(gId,name,sc,correct){const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');if(!data[gId])data[gId]=[];data[gId].push({name,score:sc,correct,date:new Date().toLocaleDateString('ja-JP')});data[gId].sort((a,b)=>b.score-a.score);data[gId]=data[gId].slice(0,20);localStorage.setItem(LS_KEY,JSON.stringify(data));}
-function showRanking(){const tabs=document.getElementById('ranking-tabs');tabs.innerHTML=GENRES.map(g=>`<button class="ranking-tab" onclick="switchRankingTab('${g.id}',this)">${g.icon} ${g.name}</button>`).join('');showScreen('screen-ranking');switchRankingTab(GENRES[0].id,tabs.querySelector('.ranking-tab'));}
-function switchRankingTab(id,btn){document.querySelectorAll('.ranking-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');currentRankingGenre=id;renderRanking(id);}
-function renderRanking(id){const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');const rows=data[id]||[];const list=document.getElementById('ranking-list');if(!rows.length){list.innerHTML='<div class="ranking-empty">// まだ記録がありません</div>';return;}list.innerHTML=rows.map((r,i)=>{const pos=i+1,pc=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';const rc=pos===1?'top1':pos===2?'top2':pos===3?'top3':'';return `<div class="ranking-row ${rc}"><span class="ranking-pos ${pc}">${pos}</span><span class="ranking-name">${r.name}</span><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);">${r.correct}/10</span><span class="ranking-score">${r.score}</span><span class="ranking-date">${r.date}</span></div>`;}).join('');}
-function deleteRanking(){if(!currentRankingGenre)return;if(!confirm(`「${GENRES.find(g=>g.id===currentRankingGenre)?.name}」の記録を削除しますか？`))return;const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');delete data[currentRankingGenre];localStorage.setItem(LS_KEY,JSON.stringify(data));renderRanking(currentRankingGenre);}
+
+/* ---------- スコア保存（ローカル） ---------- */
+function loadRanking(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{};}
+  catch(e){return {};}
+}
+function saveScore(){
+  if(!lastResult||lastResult.saved)return;
+  let name=document.getElementById('playerName').value.trim();
+  if(!name)name='名無しのアニメ好き';
+  const data=loadRanking();
+  if(!data[lastResult.genre])data[lastResult.genre]=[];
+  const d=new Date();
+  const dateStr=`${d.getMonth()+1}/${d.getDate()}`;
+  data[lastResult.genre].push({name,score:lastResult.total,correct:lastResult.correct,date:dateStr});
+  data[lastResult.genre].sort((a,b)=>b.score-a.score);
+  data[lastResult.genre]=data[lastResult.genre].slice(0,50);
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}
+  // ポータル花丸ランキングへ反映（正解率90%以上のとき）
+  try{
+    if(window.TomyStamp){
+      TomyStamp.setPlayer(name);
+      if(lastResult.hanamaru && !lastResult.stamped){
+        lastResult.stamped=true;
+        TomyStamp.send(STAMP_GAME_ID,QUIZ[lastResult.genre].name,lastResult.correct);
+      }
+    }
+  }catch(e){}
+  lastResult.saved=true;
+  document.getElementById('saveBtn').textContent='✅ 登録しました';
+  document.getElementById('saveBtn').disabled=true;
+  setTimeout(()=>showRanking(lastResult.genre),500);
+}
+
+/* ---------- 復習 ---------- */
+function showReview(){reviewIdx=0;renderReview();showScreen('review');}
+function renderReview(){
+  const card=document.getElementById('reviewCard');
+  if(wrongList.length===0){
+    card.innerHTML=`<div class="perfect-msg">🎉<br>間違いはありませんでした！<br>お見事、アニメ博士！</div>`;
+    return;
+  }
+  const w=wrongList[reviewIdx];
+  card.innerHTML=`
+    <div class="review-head">
+      <span class="ttl">📖 間違えた問題</span>
+      <span class="count">${reviewIdx+1} / ${wrongList.length}</span>
+    </div>
+    <div class="review-q">${escapeHtml(w.q)}</div>
+    <div class="ans-block">
+      <div class="ans-line yours"><span class="lab">あなたの解答</span><span class="val">${escapeHtml(w.yours)}</span></div>
+      <div class="ans-line right"><span class="lab">正解</span><span class="val">${escapeHtml(w.correct)}</span></div>
+    </div>
+    ${w.e?`<div class="explain">💡 ${escapeHtml(w.e)}</div>`:''}
+    <div class="review-nav">
+      <button class="btn btn-ghost" onclick="prevReview()" ${reviewIdx===0?'disabled style=opacity:.4':''}>‹ 前へ</button>
+      <button class="btn btn-ghost" onclick="nextReview()" ${reviewIdx===wrongList.length-1?'disabled style=opacity:.4':''}>次へ ›</button>
+    </div>`;
+}
+function prevReview(){if(reviewIdx>0){reviewIdx--;renderReview();}}
+function nextReview(){if(reviewIdx<wrongList.length-1){reviewIdx++;renderReview();}}
+function backToResult(){showScreen('result');}
+
+/* ---------- ランキング画面 ---------- */
+let curRankTab=null;
+function showRanking(focusGenre){
+  buildRankTabs();
+  curRankTab=focusGenre||ORDER[0];
+  renderRankList();
+  showScreen('ranking');
+}
+function buildRankTabs(){
+  const tabs=document.getElementById('rankTabs');
+  tabs.innerHTML='';
+  ORDER.forEach(key=>{
+    const b=document.createElement('button');
+    b.className='tab';b.textContent=QUIZ[key].name;
+    b.dataset.key=key;
+    b.onclick=()=>{curRankTab=key;renderRankList();};
+    tabs.appendChild(b);
+  });
+}
+function renderRankList(){
+  document.querySelectorAll('#rankTabs .tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.key===curRankTab);
+  });
+  const data=loadRanking();
+  const list=document.getElementById('rankList');
+  const arr=(data[curRankTab]||[]).slice(0,10);
+  if(arr.length===0){
+    list.innerHTML=`<div class="rank-empty">まだ記録がありません。<br>「${QUIZ[curRankTab].name}」に挑戦してみましょう！</div>`;
+    return;
+  }
+  list.innerHTML='';
+  arr.forEach((r,i)=>{
+    const li=document.createElement('li');
+    if(i<3)li.classList.add('top'+(i+1));
+    const medal=['🥇','🥈','🥉'][i]||(i+1);
+    li.innerHTML=`<span class="pos">${medal}</span>
+      <span class="nm">${escapeHtml(r.name)}</span>
+      <span class="dt">${r.date||''}</span>
+      <span class="sc">${r.score}点</span>`;
+    list.appendChild(li);
+  });
+}
+function clearRanking(){
+  if(confirm('この端末に保存されたランキングをすべて消去します。よろしいですか？')){
+    try{localStorage.removeItem(STORAGE_KEY);}catch(e){}
+    renderRankList();
+  }
+}
+
+/* ---------- 画面遷移 ---------- */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goTitle(){clearInterval(timerId);clearTimeout(typingTimeout);hideToast();document.getElementById('resultOverlay').classList.remove('show');showScreen('title');}
+function retrySame(){if(curGenre)startGame(curGenre);}
+function quitGame(){
+  if(confirm('クイズをやめてトップに戻りますか？（このプレイのスコアは記録されません）')){
+    clearInterval(timerId);clearTimeout(typingTimeout);hideToast();
+    document.getElementById('resultOverlay').classList.remove('show');
+    showScreen('title');
+  }
+}
+
+/* ---------- canvas 背景（動的リサイズ） ---------- */
+const canvas=document.getElementById('bgCanvas');
+const ctx=canvas.getContext('2d');
+const GLYPHS=['🎌','🔥','💕','🤖','🏫','🌿','🌟','✨','★','◆','♪','💫','🎬','📺','🌸'];
+const NEON=['255,0,51','255,206,58','255,107,134'];
+let drops=[],dpr=1;
+function resizeCanvas(){
+  dpr=window.devicePixelRatio||1;
+  canvas.width=Math.floor(window.innerWidth*dpr);
+  canvas.height=Math.floor(window.innerHeight*dpr);
+  canvas.style.width=window.innerWidth+'px';
+  canvas.style.height=window.innerHeight+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const count=Math.max(12,Math.floor(window.innerWidth/40));
+  drops=[];
+  for(let i=0;i<count;i++){
+    drops.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      size:14+Math.random()*22,
+      spd:.15+Math.random()*.5,
+      ch:GLYPHS[Math.floor(Math.random()*GLYPHS.length)],
+      col:NEON[Math.floor(Math.random()*NEON.length)],
+      a:.05+Math.random()*.12
+    });
+  }
+}
+function drawBg(){
+  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+  drops.forEach(d=>{
+    ctx.font=`${d.size}px 'Noto Sans JP', sans-serif`;
+    ctx.fillStyle=`rgba(${d.col},${d.a})`;
+    ctx.shadowColor=`rgba(${d.col},${d.a*2})`;
+    ctx.shadowBlur=10;
+    ctx.fillText(d.ch,d.x,d.y);
+    ctx.shadowBlur=0;
+    d.y+=d.spd;
+    if(d.y>window.innerHeight+d.size){
+      d.y=-d.size;d.x=Math.random()*window.innerWidth;
+      d.ch=GLYPHS[Math.floor(Math.random()*GLYPHS.length)];
+      d.col=NEON[Math.floor(Math.random()*NEON.length)];
+    }
+  });
+  requestAnimationFrame(drawBg);
+}
+let resizeTO;
+window.addEventListener('resize',()=>{clearTimeout(resizeTO);resizeTO=setTimeout(resizeCanvas,120);});
+window.addEventListener('orientationchange',()=>setTimeout(resizeCanvas,200));
+
+/* ---------- 起動 ---------- */
 buildGenreCards();
+resizeCanvas();
+drawBg();
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal();});
 </script>
 </body>
 </html>
